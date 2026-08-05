@@ -1,0 +1,16 @@
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import App from './App.jsx'
+import AdminApp from './admin/AdminApp.jsx'
+import './styles.css'
+import './admin/admin.css'
+
+// Sin router externo: /admin carga el panel de administrador,
+// cualquier otra ruta carga la página pública de la boda.
+const isAdminRoute = window.location.pathname.startsWith('/admin')
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <React.StrictMode>
+    {isAdminRoute ? <AdminApp /> : <App />}
+  </React.StrictMode>,
+)

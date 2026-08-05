@@ -1,0 +1,90 @@
+/* ============ ADMIN ============ */
+.admin-loading {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  color: var(--ink-soft); font-size: 0.9rem;
+}
+
+.admin-login-screen {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(180deg, var(--wine) 0%, var(--wine-deep) 100%);
+  padding: 1.5rem;
+}
+
+.admin-login-card {
+  width: 100%; max-width: 380px;
+  background: var(--cream-card);
+  border-radius: 16px;
+  padding: 2.4rem 2rem;
+  display: flex; flex-direction: column; gap: 1rem;
+  box-shadow: 0 30px 60px -20px rgba(0,0,0,0.5);
+}
+.admin-login-title { font-family: 'Cormorant Garamond', serif; font-size: 1.8rem; color: var(--wine-deep); }
+.admin-login-sub { font-size: 0.85rem; color: var(--ink-soft); margin-bottom: 0.4rem; }
+
+.admin-shell { min-height: 100vh; background: var(--cream); }
+
+.admin-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.4rem 1.8rem;
+  background: var(--wine-deep);
+  color: var(--cream);
+}
+.admin-header h1 { font-family: 'Cormorant Garamond', serif; font-size: 1.3rem; }
+.admin-header p { font-size: 0.78rem; color: rgba(247,241,232,0.7); }
+.admin-header .btn-outline { border-color: var(--gold-soft); color: var(--cream); }
+.admin-header .btn-outline:hover { background: var(--gold-soft); color: var(--wine-deep); }
+
+.admin-tabs { display: flex; gap: 0.5rem; padding: 1rem 1.8rem 0; border-bottom: 1px solid rgba(100,25,20,0.12); }
+.admin-tab {
+  padding: 0.7rem 1.1rem; font-size: 0.85rem; font-weight: 500;
+  color: var(--ink-soft); border-bottom: 2px solid transparent;
+}
+.admin-tab.is-active { color: var(--wine); border-bottom-color: var(--wine); }
+
+.admin-content { padding: 1.6rem 1.8rem 3rem; max-width: 1200px; margin: 0 auto; }
+
+/* stats */
+.admin-stats-row { display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.6rem; }
+.admin-stat {
+  flex: 1; min-width: 120px;
+  background: var(--cream-card); border: 1px solid rgba(201,166,107,0.35); border-radius: 12px;
+  padding: 1rem; text-align: center; font-size: 0.75rem; color: var(--ink-soft);
+}
+.admin-stat span { display: block; font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; color: var(--wine-deep); font-weight: 700; }
+
+/* table */
+.admin-table-wrap { overflow-x: auto; background: var(--cream-card); border-radius: 12px; border: 1px solid rgba(201,166,107,0.3); }
+.admin-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+.admin-table th, .admin-table td { padding: 0.75rem 0.9rem; text-align: left; border-bottom: 1px solid rgba(100,25,20,0.08); white-space: nowrap; }
+.admin-table th { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-soft); }
+.admin-row-actions { display: flex; gap: 0.4rem; }
+
+.btn-mini {
+  font-size: 0.72rem; font-weight: 600; padding: 0.4rem 0.7rem; border-radius: 7px;
+  border: 1px solid rgba(100,25,20,0.2); color: var(--ink-soft); background: var(--cream);
+}
+.btn-mini-approve { color: #1e7a3f; border-color: #1e7a3f; }
+.btn-mini-approve:hover { background: #1e7a3f; color: #fff; }
+.btn-mini-reject { color: var(--wine); border-color: var(--wine); }
+.btn-mini-reject:hover { background: var(--wine); color: #fff; }
+.btn-mini-delete:hover { background: var(--ink); color: #fff; }
+
+.admin-badge { font-size: 0.7rem; font-weight: 600; padding: 0.25rem 0.6rem; border-radius: 999px; }
+.admin-badge-pending { background: rgba(201,166,107,0.25); color: #8a6a2f; }
+.admin-badge-approved { background: rgba(30,122,63,0.15); color: #1e7a3f; }
+.admin-badge-rejected { background: rgba(100,25,20,0.12); color: var(--wine); }
+
+/* photo moderation grid */
+.admin-photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.2rem; }
+.admin-photo-card { background: var(--cream-card); border: 1px solid rgba(201,166,107,0.3); border-radius: 12px; overflow: hidden; }
+.admin-photo-card img, .admin-photo-card video { width: 100%; height: 180px; object-fit: cover; }
+.admin-photo-meta { padding: 0.8rem 0.9rem; }
+.admin-photo-name { font-weight: 600; font-size: 0.85rem; color: var(--wine-deep); }
+.admin-photo-caption { font-size: 0.78rem; color: var(--ink-soft); margin-top: 0.2rem; }
+.admin-photo-date { font-size: 0.7rem; color: var(--ink-soft); margin-top: 0.3rem; opacity: 0.8; }
+.admin-delete-btn { margin-top: 0.7rem; width: 100%; font-size: 0.78rem; padding: 0.5rem; }
+
+@media (max-width: 640px) {
+  .admin-header { padding: 1.1rem 1.2rem; }
+  .admin-tabs, .admin-content { padding-left: 1.1rem; padding-right: 1.1rem; }
+}
