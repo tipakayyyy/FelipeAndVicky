@@ -2,12 +2,12 @@ import { useState } from 'react'
 import { COUPLE } from '../constants'
 import { MenuIcon, CloseIcon } from './icons.jsx'
 
+// 1. Quité la opción "Música" de la lista
 const LINKS = [
   { id: 'inicio', label: 'Inicio' },
   { id: 'historia', label: 'Historia' },
   { id: 'gran-dia', label: 'El gran día' },
   { id: 'galeria', label: 'Galería' },
-  { id: 'musica', label: 'Música' },
   { id: 'asistencia', label: 'Asistencia' },
   { id: 'informacion', label: 'Regalos' },
 ]
@@ -17,7 +17,10 @@ export default function Navbar({ activeSection }) {
 
   const handleNavigate = (id) => {
     setOpen(false)
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+    const element = document.getElementById(id)
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' })
+    }
   }
 
   return (
@@ -72,9 +75,24 @@ export default function Navbar({ activeSection }) {
         </button>
       </nav>
 
+      {/* Fondo transparente para cerrar el menú al hacer clic en cualquier otra parte */}
       {open && (
-        <div className="navbar-mobile-menu">
-          {LINKS.map((link) => (
+        <div 
+          className="navbar-backdrop"
+          onClick={() => setOpen(false)}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 40,
+            backgroundColor: 'rgba(0, 0, 0, 0.3)'
+          }}
+        />
+      )}
+
+      {/* Menú móvil desplegable */}
+      {open && (
+        <div className="navbar-mobile-menu" style={{ zIndex: 50 }}>
+          {LINKS.map((link, i) => (
             <button
               key={link.id}
               className={
@@ -82,6 +100,9 @@ export default function Navbar({ activeSection }) {
               }
               onClick={() => handleNavigate(link.id)}
             >
+              <span style={{ opacity: 0.6, marginRight: '10px' }}>
+                {String(i + 1).padStart(2, '0')}
+              </span>
               {link.label}
             </button>
           ))}
