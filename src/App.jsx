@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback, useMemo } from 'react'
 import { supabase, TABLE_NAME } from './supabaseClient'
 import Navbar from './components/Navbar.jsx'
 import Home from './components/sections/Home.jsx'
+import WeddingCountdown from './components/sections/WeddingCountdown.jsx' // 👈 Componente del contador
 import OurStory from './components/sections/OurStory.jsx'
 import BigDay from './components/sections/BigDay.jsx'
 import InfoSection from './components/sections/InfoSection.jsx'
@@ -15,7 +16,7 @@ import Footer from './components/Footer.jsx'
 
 const PAGE_SIZE = 9
 
-// 🔄 Lista de IDs exactos para que la navegación y el observador de scroll funcionen
+// 🔄 Lista de IDs para navegación y observador de scroll
 const SECTION_IDS = [
   'inicio',
   'historia',
@@ -143,6 +144,9 @@ export default function App() {
       <section id="inicio">
         <Home />
       </section>
+
+      {/* ⏰ CONTADOR Y AGENDAR CALENDARIO */}
+      <WeddingCountdown />
 
       {/* 2. Nuestra Historia */}
       <section id="historia">
