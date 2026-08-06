@@ -5,7 +5,7 @@ import React, { useState } from 'react'
 // =========================================================
 // Remplaza null por la ruta de tu foto si deseas cambiar el vector por foto
 const customImages = {
-  woman: null,       // ej: '/photos/dama.jpg'
+  woman: '/photos/dama.jpeg',       // ej: '/photos/dama.jpg'
   man: '/photos/caballero.jpeg',         // ej: '/photos/caballero.jpg'
   giftBanner: '/photos/foto-pareja.jpeg'   // ej: '/photos/foto-pareja.jpg'
 }
