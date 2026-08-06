@@ -36,7 +36,7 @@ export default function MusicPlayer() {
         zIndex: 99999999,
       }}
     >
-      <audio ref={audioRef} src="/cancion.mp3" loop />
+      <audio ref={audioRef} src="/musica.mp3" loop />
 
       <button
         onClick={togglePlay}
