@@ -136,6 +136,9 @@ export default function App() {
     <div className="page">
       <Navbar activeSection={activeSection} />
 
+      {/* 🎵 El reproductor activo de fondo y flotante */}
+      <MusicPlayer />
+
       {/* 1. Portada */}
       <section id="inicio">
         <Home />

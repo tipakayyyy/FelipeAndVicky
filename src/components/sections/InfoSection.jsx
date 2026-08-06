@@ -1,29 +1,8 @@
 import React, { useState } from 'react'
 
 // =========================================================
-// 🖼️ CONFIGURACIÓN DE IMÁGENES OPCIONALES
+// 🌿 ÍCONOS AUXILIARES
 // =========================================================
-// Remplaza null por la ruta de tu foto si deseas cambiar el vector por foto
-const customImages = {
-  woman: '/photos/dama.jpeg',       // ej: '/photos/dama.jpg'
-  man: '/photos/caballero.jpeg',         // ej: '/photos/caballero.jpg'
-  giftBanner: '/photos/foto-pareja.jpeg'   // ej: '/photos/foto-pareja.jpg'
-}
-
-// =========================================================
-// 🌿 ORNAMENTOS Y VECTORIALES
-// =========================================================
-const BotanicalBranch = ({ color = '#D4A373', width = 110 }) => (
-  <svg width={width} height="22" viewBox="0 0 120 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M0 12C30 12 40 12 60 12C80 12 90 12 120 12" stroke={color} strokeWidth="0.75" strokeDasharray="2 2" />
-    <circle cx="60" cy="12" r="3" fill={color} />
-    <path d="M48 12C45 8 40 7 36 9C38 12 42 13 48 12Z" fill={color} opacity="0.85" />
-    <path d="M52 12C50 16 46 18 42 16C43 13 47 11 52 12Z" fill={color} opacity="0.85" />
-    <path d="M72 12C75 8 80 7 84 9C82 12 78 13 72 12Z" fill={color} opacity="0.85" />
-    <path d="M68 12C70 16 74 18 78 16C77 13 73 11 68 12Z" fill={color} opacity="0.85" />
-  </svg>
-)
-
 const CopyIcon = ({ color = 'currentColor', size = 16 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
     <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
@@ -35,26 +14,6 @@ const CardIcon = ({ color = 'currentColor', size = 18 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
     <rect x="2" y="5" width="20" height="14" rx="3" />
     <line x1="2" y1="10" x2="22" y2="10" />
-  </svg>
-)
-
-const WomanSilhouette = ({ color = '#FAF7F2', height = 52 }) => (
-  <svg height={height} viewBox="0 0 100 200" fill={color} xmlns="http://www.w3.org/2000/svg">
-    <path d="M50 12 C38 12 33 24 33 38 C33 46 38 52 38 52 C42 46 44 44 50 44 C56 44 58 46 62 52 C62 52 67 46 67 38 C67 24 62 12 50 12 Z" />
-    <circle cx="50" cy="32" r="15" />
-    <path d="M37 56 C29 56 24 62 24 72 L24 102 C24 107 28 110 32 110 L34 110 L22 154 C21 157 23 160 27 160 L73 160 C77 160 79 157 78 154 L66 110 L68 110 C72 110 76 107 76 102 L76 72 C76 62 71 56 63 56 Z" />
-    <rect x="41" y="162" width="7" height="30" rx="3.5" />
-    <rect x="52" y="162" width="7" height="30" rx="3.5" />
-  </svg>
-)
-
-const ManSilhouette = ({ color = '#FAF7F2', height = 52 }) => (
-  <svg height={height} viewBox="0 0 100 200" fill={color} xmlns="http://www.w3.org/2000/svg">
-    <circle cx="50" cy="28" r="17" />
-    <path d="M26 56 C20 56 16 62 16 72 L16 108 C16 113 20 116 24 116 L31 116 L31 184 C31 189 35 192 40 192 L44 192 C49 192 52 189 52 184 L52 126 L49 126 L49 184 C49 189 52 192 56 192 L60 192 C69 192 69 184 L69 116 L76 116 C80 116 84 113 84 108 L84 72 C84 62 80 56 74 56 Z" />
-    <polygon points="50,56 42,56 46,74 50,88 54,74 58,56" fill="#4A121A" />
-    <polygon points="50,60 47,66 50,84 53,66" fill={color} />
-    <polygon points="46,56 54,56 50,62" fill={color} />
   </svg>
 )
 
@@ -92,62 +51,66 @@ export function GiftRegistryCard() {
 
   return (
     <div className="gift-card-container">
+      
+      {/* BLOQUE 1: ENCABEZADO */}
       <div>
-        {customImages.giftBanner ? (
-          <div className="card-image-header">
-            <img src={customImages.giftBanner} alt="Mesa de Regalos" />
-          </div>
-        ) : (
-          <div style={{ textAlign: 'center', marginBottom: '6px' }}>
-            <BotanicalBranch color="#D4A373" width={110} />
-          </div>
-        )}
-
-        <span className="gift-subtitle">✧ MESA DE REGALOS ✧</span>
+        <div className="dc-header-ornament">
+          <span className="line"></span>
+          <span> ✦ </span>
+          <span className="line"></span>
+        </div>
+        <p className="gift-subtitle">✦ MESA DE REGALOS ✦</p>
         <h3 className="gift-headline">Aportes & Regalo de Bodas</h3>
-
-        <p className="gift-description">
-          Tu presencia es nuestro mejor regalo. Si deseas hacernos un presente, puedes realizarlo con tarjeta de crédito/débito o vía transferencia bancaria.
-        </p>
-
-        <div className="gift-divider" />
-
-        <div className="gift-buttons-wrapper">
-          <button
-            type="button"
-            className="luxury-btn-gold"
-            onClick={handleOpenMercadoPago}
-          >
-            <CardIcon color="#FFFFFF" size={19} />
-            <span>Pagar con Tarjeta en Línea</span>
-          </button>
-
-          <div className="transfer-grid">
-            <button
-              type="button"
-              className="luxury-btn-primary"
-              onClick={() => handleCopy(bankData.bcpAccount, 'Número BCP')}
-            >
-              <CopyIcon color="#FAF7F2" size={16} />
-              <span>Copiar cuenta BCP</span>
-            </button>
-
-            <button
-              type="button"
-              className="luxury-btn-primary"
-              onClick={() => handleCopy(bankData.cciAccount, 'CCI')}
-            >
-              <CopyIcon color="#FAF7F2" size={16} />
-              <span>Copiar CCI</span>
-            </button>
-          </div>
+        <div className="dc-header-divider">
+          <span className="line-small"></span>
+          <span style={{ fontSize: '8px' }}>❖</span>
+          <span className="line-small"></span>
         </div>
       </div>
 
-      <div style={{ textAlign: 'center', marginTop: '16px' }}>
-        <span style={{ fontSize: '0.78rem', color: '#DCD3C9', fontStyle: 'italic', letterSpacing: '0.3px' }}>
-          Titulares: Felipe & Vicky
-        </span>
+      {/* BLOQUE 2: MENSAJE PRINCIPAL */}
+      <p className="gift-description">
+        Tu presencia es nuestro mejor regalo. Si deseas hacernos un presente, puedes realizarlo a través de los siguientes medios:
+      </p>
+
+      {/* BLOQUE 3: PAGO EN LÍNEA (CONTENEDOR OSCURO) */}
+      <div className="gift-subcard">
+        <h5 className="gift-subcard-title">💳 PAGO CON TARJETA DE CRÉDITO / DÉBITO</h5>
+        <p className="gift-subcard-text">Plataforma segura e inmediata en línea</p>
+        <button
+          type="button"
+          className="luxury-btn-gold"
+          onClick={handleOpenMercadoPago}
+        >
+          <CardIcon color="#3D0D0B" size={19} />
+          <span>Pagar con Tarjeta en Línea</span>
+        </button>
+      </div>
+
+      {/* BLOQUE 4: TRANSFERENCIA BANCARIA (CONTENEDOR OSCURO) */}
+      <div className="gift-subcard">
+        <h5 className="gift-subcard-title">🏦 TRANSFERENCIA BANCARIA DIRECTA</h5>
+        <p className="gift-subcard-text">Titulares: Felipe & Vicky</p>
+        
+        <div className="transfer-grid">
+          <button
+            type="button"
+            className="luxury-btn-primary"
+            onClick={() => handleCopy(bankData.bcpAccount, 'Número BCP')}
+          >
+            <CopyIcon color="#FAF7F2" size={15} />
+            <span>Copiar BCP</span>
+          </button>
+
+          <button
+            type="button"
+            className="luxury-btn-primary"
+            onClick={() => handleCopy(bankData.cciAccount, 'CCI')}
+          >
+            <CopyIcon color="#FAF7F2" size={15} />
+            <span>Copiar CCI</span>
+          </button>
+        </div>
       </div>
 
       {toastMessage && (
@@ -163,135 +126,358 @@ export function GiftRegistryCard() {
 // 🌟 SECCIÓN COMPLETA DE INFORMACIÓN
 // =========================================================
 export default function InfoSection() {
-  const dressCodeData = {
-    women: 'Luzcan su belleza con tacones y vestidos largos.',
-    men: 'Destaquen su elegancia con trajes en tonos oscuros.',
-    avoidColors: [
-      { name: 'Blanco', hex: '#ffffff' },
-      { name: 'Ivory', hex: '#f5efe6' },
-      { name: 'Vino', hex: '#6b1d24' },
-      { name: 'Azul Noche', hex: '#1b2a4a' },
-      { name: 'Dorado', hex: '#b8860b' }
-    ]
-  }
+  const avoidColors = [
+    { name: 'Blanco', hex: '#FFFFFF' },
+    { name: 'Ivory', hex: '#F5EFE6' },
+    { name: 'Vino', hex: '#5C1622' },
+    { name: 'Azul Noche', hex: '#162238' },
+    { name: 'Dorado', hex: '#C8A15A' }
+  ]
 
   return (
-    <section id="informacion" style={{ backgroundColor: '#FAF7F2', width: '100%', padding: '70px 20px', display: 'flex', justifyContent: 'center', boxSizing: 'border-box' }}>
+    <section id="informacion" className="info-section-main">
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Montserrat:wght@300;400;500;600&display=swap');
+
+        .info-section-main {
+          background-color: #FAF7F2;
+          width: 100%;
+          padding: 70px 20px;
+          display: flex;
+          justify-content: center;
+          box-sizing: border-box;
+          font-family: 'Montserrat', sans-serif;
+        }
+
         .info-wrapper {
           max-width: 1080px;
           width: 100%;
-          font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
         }
 
         .section-header {
           text-align: center;
-          margin-bottom: 40px;
+          margin-bottom: 48px;
         }
 
         .section-header .tag {
           text-transform: uppercase;
           font-size: 0.8rem;
           letter-spacing: 3.5px;
-          color: #B8895E !important;
-          font-weight: 700;
+          color: #C8A15A !important;
+          font-weight: 600;
           display: block;
           margin-bottom: 6px;
-          font-family: system-ui, -apple-system, sans-serif;
         }
 
         .section-header .title {
-          font-size: 2.5rem;
+          font-family: 'Cormorant Garamond', Georgia, serif;
+          font-size: 2.8rem;
           font-weight: 300;
           color: #2C1810 !important;
           margin: 0;
         }
 
         .section-header .title-italic {
-          color: #8A2B32 !important;
+          color: #4B0F18 !important;
           font-style: italic;
         }
 
+        /* GRID BALANCEADO CON ALINEACIÓN PERFECTA */
         .grid-container {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-          gap: 28px;
+          grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+          gap: 32px;
           align-items: stretch;
         }
 
-        /* CONTENEDORES PRINCIPALES COMPACTOS */
-        .gift-card-container, .dress-card-container {
-          background-color: #4A121A !important;
-          border: 1px solid #6E1F27 !important;
-          border-radius: 26px;
-          padding: 30px 24px;
-          box-shadow: 0 18px 40px rgba(44, 24, 16, 0.12);
+        /* TARJETA 1: CÓDIGO DE VESTIMENTA */
+        .dress-code-luxury-card {
+          background-color: #4B0F18;
+          border: 1px solid rgba(200, 161, 90, 0.35);
+          border-radius: 32px;
+          padding: 40px 32px;
+          color: #FDF8F4;
+          box-shadow: 0 20px 45px rgba(61, 13, 11, 0.25);
           display: flex;
           flex-direction: column;
+          justify-content: space-between;
           gap: 20px;
           box-sizing: border-box;
-          position: relative;
-        }
-
-        .card-image-header {
-          width: 100%;
-          height: 165px;
-          border-radius: 16px;
-          overflow: hidden;
-          margin-bottom: 14px;
-          border: 1px solid rgba(212, 163, 115, 0.3);
-        }
-
-        .card-image-header img {
-          width: 100%;
+          text-align: center;
           height: 100%;
-          object-fit: cover;
         }
 
-        .gift-subtitle {
-          display: block;
-          text-align: center;
-          font-size: 0.72rem;
+        .dc-header-ornament {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+          color: #C8A15A;
+          font-size: 11px;
+          margin-bottom: 6px;
+        }
+
+        .dc-header-ornament .line {
+          height: 1px;
+          width: 50px;
+          background: linear-gradient(90deg, transparent, #C8A15A);
+        }
+        .dc-header-ornament .line:last-child {
+          background: linear-gradient(90deg, #C8A15A, transparent);
+        }
+
+        .dc-subtitle {
+          color: #C8A15A;
+          font-size: 0.8rem;
           letter-spacing: 3px;
-          color: #D4A373 !important;
-          font-weight: 600;
+          text-transform: uppercase;
+          font-weight: 500;
           margin-bottom: 4px;
-          font-family: system-ui, -apple-system, sans-serif;
         }
 
-        .gift-headline {
-          font-size: 1.85rem;
+        .dc-title {
+          font-family: 'Cormorant Garamond', serif;
+          font-size: 2.5rem;
           font-weight: 400;
-          color: #FAF7F2 !important;
-          text-align: center;
-          margin: 0 0 10px 0;
-          letter-spacing: -0.2px;
+          color: #FDF8F4;
+          margin: 0;
+          line-height: 1.1;
         }
 
-        .gift-description {
-          color: #E8DACB !important;
-          font-size: 0.94rem;
-          line-height: 1.55;
-          text-align: center;
-          margin: 0 auto;
-          max-width: 420px;
+        .dc-header-divider {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          margin-top: 8px;
+          color: #C8A15A;
+        }
+
+        .dc-header-divider .line-small {
+          height: 1px;
+          width: 35px;
+          background-color: #C8A15A;
+          opacity: 0.6;
+        }
+
+        .dc-columns-wrapper {
+          display: grid;
+          grid-template-columns: 1fr auto 1fr;
+          align-items: center;
+          gap: 12px;
+        }
+
+        .dc-column {
+          padding: 4px;
+          transition: transform 250ms ease;
+        }
+
+        .dc-column:hover .dc-outline-icon {
+          transform: scale(1.06);
+        }
+
+        .dc-icon-box {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 6px;
+          margin-bottom: 8px;
+          color: #C8A15A;
+        }
+
+        .dc-outline-icon {
+          width: 78px;
+          height: 78px;
+          transition: transform 250ms ease;
+        }
+
+        .dc-column-title {
+          font-family: 'Cormorant Garamond', serif;
+          font-size: 1.75rem;
+          font-weight: 400;
+          margin: 0 0 4px 0;
+          color: #FDF8F4;
+        }
+
+        .dc-column-text {
+          font-size: 0.85rem;
+          color: rgba(255, 255, 255, 0.82);
+          line-height: 1.4;
+          margin: 0;
           font-weight: 300;
         }
 
-        .gift-divider {
-          width: 40px;
-          height: 1px;
-          background-color: #D4A373;
-          margin: 18px auto;
-          opacity: 0.5;
-        }
-
-        /* BOTONES */
-        .gift-buttons-wrapper {
+        .dc-vertical-divider {
           display: flex;
           flex-direction: column;
-          gap: 12px;
-          width: 100%;
+          align-items: center;
+          height: 100%;
+          color: #C8A15A;
+          opacity: 0.4;
+        }
+
+        .dc-vertical-line {
+          width: 1px;
+          height: 50px;
+          background-color: #C8A15A;
+        }
+
+        .dc-reserved-container {
+          background-color: #57141F;
+          border: 1px solid rgba(200, 161, 90, 0.3);
+          border-radius: 20px;
+          padding: 18px 14px;
+        }
+
+        .dc-reserved-title {
+          color: #C8A15A;
+          font-size: 0.76rem;
+          letter-spacing: 1.5px;
+          font-weight: 600;
+          margin: 0 0 12px 0;
+          text-transform: uppercase;
+        }
+
+        .dc-colors-row {
+          display: flex;
+          justify-content: space-around;
+          align-items: center;
+          gap: 8px;
+          flex-wrap: wrap;
+        }
+
+        .dc-color-item {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 6px;
+          transition: transform 250ms ease;
+        }
+
+        .dc-color-item:hover {
+          transform: translateY(-3px);
+        }
+
+        .dc-color-circle {
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          border: 1.5px solid #C8A15A;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .dc-color-name {
+          font-size: 0.74rem;
+          color: rgba(255, 255, 255, 0.82);
+          font-weight: 400;
+        }
+
+        .dc-adults-container {
+          background-color: #57141F;
+          border: 1px solid rgba(200, 161, 90, 0.35);
+          border-radius: 20px;
+          padding: 18px 20px;
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          text-align: left;
+        }
+
+        .dc-no-kids-svg {
+          width: 68px;
+          height: 68px;
+          flex-shrink: 0;
+          transition: transform 250ms ease;
+        }
+
+        .dc-adults-container:hover .dc-no-kids-svg {
+          transform: scale(1.05);
+        }
+
+        .dc-adults-title {
+          font-family: 'Cormorant Garamond', serif;
+          font-size: 1.5rem;
+          color: #C8A15A;
+          margin: 0 0 2px 0;
+          letter-spacing: 1px;
+          font-weight: 600;
+        }
+
+        .dc-adults-text {
+          font-size: 0.84rem;
+          color: rgba(255, 255, 255, 0.82);
+          line-height: 1.4;
+          margin: 0;
+          font-weight: 300;
+        }
+
+        /* TARJETA 2: MESA DE REGALOS (ESTRUCTURA REDISEÑADA) */
+        .gift-card-container {
+          background-color: #4B0F18;
+          border: 1px solid rgba(200, 161, 90, 0.35);
+          border-radius: 32px;
+          padding: 40px 32px;
+          box-shadow: 0 20px 45px rgba(61, 13, 11, 0.25);
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          gap: 18px;
+          box-sizing: border-box;
+          position: relative;
+          height: 100%;
+          text-align: center;
+        }
+
+        .gift-subtitle {
+          color: #C8A15A !important;
+          font-size: 0.8rem;
+          letter-spacing: 3px;
+          text-transform: uppercase;
+          font-weight: 500;
+          margin-bottom: 4px;
+          display: block;
+        }
+
+        .gift-headline {
+          font-family: 'Cormorant Garamond', serif;
+          font-size: 2.5rem;
+          font-weight: 400;
+          color: #FDF8F4 !important;
+          margin: 0;
+          line-height: 1.1;
+        }
+
+        .gift-description {
+          color: rgba(255, 255, 255, 0.85) !important;
+          font-size: 0.88rem;
+          line-height: 1.5;
+          margin: 0 auto;
+          font-weight: 300;
+        }
+
+        /* Tarjetas Oscuras dentro de Mesa de Regalos */
+        .gift-subcard {
+          background-color: #57141F;
+          border: 1px solid rgba(200, 161, 90, 0.3);
+          border-radius: 20px;
+          padding: 18px 18px;
+          text-align: center;
+        }
+
+        .gift-subcard-title {
+          color: #C8A15A;
+          font-size: 0.76rem;
+          letter-spacing: 1.2px;
+          font-weight: 600;
+          margin: 0 0 4px 0;
+          text-transform: uppercase;
+        }
+
+        .gift-subcard-text {
+          font-size: 0.82rem;
+          color: rgba(255, 255, 255, 0.75);
+          margin: 0 0 12px 0;
+          font-weight: 300;
         }
 
         .transfer-grid {
@@ -303,218 +489,224 @@ export default function InfoSection() {
 
         .luxury-btn-gold {
           width: 100%;
-          height: 50px;
-          background-color: #C4966B !important;
-          color: #FFFFFF !important;
+          height: 48px;
+          background-color: #C8A15A !important;
+          color: #3D0D0B !important;
           border: none;
           border-radius: 9999px;
           font-size: 0.85rem;
           font-weight: 600;
-          font-family: system-ui, -apple-system, sans-serif;
-          letter-spacing: 0.3px;
-          cursor: pointer;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          gap: 9px;
-          padding: 0 18px;
-          box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
-          transition: all 250ms ease;
-        }
-
-        .luxury-btn-gold:hover {
-          background-color: #B08156 !important;
-          transform: translateY(-2px);
-        }
-
-        .luxury-btn-primary {
-          width: 100%;
-          height: 48px;
-          background-color: #330B10 !important;
-          color: #FAF7F2 !important;
-          border: 1px solid rgba(212, 163, 115, 0.35);
-          border-radius: 9999px;
-          font-size: 0.8rem;
-          font-weight: 500;
-          font-family: system-ui, -apple-system, sans-serif;
-          letter-spacing: 0.2px;
           cursor: pointer;
           display: inline-flex;
           align-items: center;
           justify-content: center;
           gap: 8px;
-          padding: 0 12px;
+          box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+          transition: all 250ms ease;
+        }
+
+        .luxury-btn-gold:hover {
+          background-color: #D8B26B !important;
+          transform: translateY(-2px);
+        }
+
+        .luxury-btn-primary {
+          width: 100%;
+          height: 44px;
+          background-color: #4B0F18 !important;
+          color: #FAF7F2 !important;
+          border: 1px solid rgba(200, 161, 90, 0.35);
+          border-radius: 9999px;
+          font-size: 0.8rem;
+          font-weight: 500;
+          cursor: pointer;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 6px;
           transition: all 250ms ease;
         }
 
         .luxury-btn-primary:hover {
-          background-color: #24070A !important;
-          border-color: #D4A373;
+          background-color: #5C1521 !important;
+          border-color: #C8A15A;
           transform: translateY(-2px);
         }
 
-        /* TOAST */
         .luxury-toast {
           position: absolute;
           bottom: -20px;
           left: 50%;
           transform: translateX(-50%);
-          background-color: #24070A;
+          background-color: #57141F;
           color: #FAF7F2;
           padding: 10px 22px;
           border-radius: 30px;
-          font-size: 0.8rem;
-          font-family: system-ui, -apple-system, sans-serif;
+          font-size: 0.82rem;
           font-weight: 500;
           box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-          border: 1px solid #D4A373;
+          border: 1px solid #C8A15A;
           z-index: 10;
           white-space: nowrap;
         }
 
-        /* SUBCARD DE DAMAS/CABALLEROS CON IMÁGENES AMPLIADAS */
-        .inner-subcard {
-          background-color: rgba(0, 0, 0, 0.22);
-          border-radius: 18px;
-          padding: 14px 12px;
-          text-align: center;
-          border: 1px solid rgba(212, 163, 115, 0.22);
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-        }
-
-        .subcard-img {
-          width: 100%;
-          height: 165px; /* 👈 IMAGENES MÁS GRANDES Y VISIBLES */
-          object-fit: cover;
-          border-radius: 14px;
-          margin-bottom: 12px;
-          border: 1px solid rgba(212, 163, 115, 0.25);
-        }
-
-        @media (max-width: 640px) {
-          .gift-card-container, .dress-card-container {
-            padding: 24px 18px;
-            border-radius: 22px;
+        /* RESPONSIVE MÓVIL */
+        @media (max-width: 680px) {
+          .dress-code-luxury-card, .gift-card-container {
+            padding: 30px 18px;
+            border-radius: 24px;
+            height: auto;
           }
 
-          .gift-headline {
-            font-size: 1.65rem;
+          .dc-columns-wrapper {
+            grid-template-columns: 1fr;
+            gap: 20px;
+          }
+
+          .dc-vertical-divider {
+            flex-direction: row;
+            justify-content: center;
+          }
+
+          .dc-vertical-line {
+            width: 60px;
+            height: 1px;
+          }
+
+          .dc-adults-container {
+            flex-direction: column;
+            text-align: center;
+            padding: 18px 14px;
           }
 
           .transfer-grid {
             grid-template-columns: 1fr;
           }
-
-          .subcard-img {
-            height: 140px;
-          }
         }
       `}</style>
 
       <div className="info-wrapper">
-        
-        {/* ENCABEZADO */}
+        {/* ENCABEZADO DE SECCIÓN */}
         <div className="section-header">
           <span className="tag">Detalles Importantes</span>
           <h2 className="title">
             Información para nuestros <span className="title-italic">Invitados</span>
           </h2>
-          <div style={{ width: '40px', height: '1px', backgroundColor: '#8A2B32', margin: '12px auto 0' }} />
+          <div style={{ width: '40px', height: '1px', backgroundColor: '#4B0F18', margin: '12px auto 0' }} />
         </div>
 
         <div className="grid-container">
           
-          {/* CÓDIGO DE VESTIMENTA */}
-          <div className="dress-card-container">
+          {/* ================= 1. CÓDIGO DE VESTIMENTA ================= */}
+          <div className="dress-code-luxury-card">
+            
+            {/* BLOQUE 1: ENCABEZADO */}
             <div>
-              <div style={{ textAlign: 'center', marginBottom: '6px' }}>
-                <BotanicalBranch color="#D4A373" width={110} />
+              <div className="dc-header-ornament">
+                <span className="line"></span>
+                <span> ✦ </span>
+                <span className="line"></span>
               </div>
-              <span className="gift-subtitle">✧ DRESS CODE ✧</span>
-              <h3 className="gift-headline" style={{ marginBottom: '18px' }}>
-                Código de Vestimenta
-              </h3>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                
-                {/* DAMAS */}
-                <div className="inner-subcard">
-                  {customImages.woman ? (
-                    <img src={customImages.woman} alt="Damas" className="subcard-img" />
-                  ) : (
-                    <div style={{ height: '65px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '4px 0 8px 0' }}>
-                      <WomanSilhouette color="#FAF7F2" height={52} />
-                    </div>
-                  )}
-                  <strong style={{ display: 'block', color: '#FAF7F2', fontSize: '0.95rem', marginBottom: '4px' }}>
-                    Damas
-                  </strong>
-                  <span style={{ fontSize: '0.82rem', color: '#E8DACB', lineHeight: '1.4', display: 'block' }}>
-                    {dressCodeData.women}
-                  </span>
-                </div>
-
-                {/* CABALLEROS */}
-                <div className="inner-subcard">
-                  {customImages.man ? (
-                    <img src={customImages.man} alt="Caballeros" className="subcard-img" />
-                  ) : (
-                    <div style={{ height: '65px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '4px 0 8px 0' }}>
-                      <ManSilhouette color="#FAF7F2" height={52} />
-                    </div>
-                  )}
-                  <strong style={{ display: 'block', color: '#FAF7F2', fontSize: '0.95rem', marginBottom: '4px' }}>
-                    Caballeros
-                  </strong>
-                  <span style={{ fontSize: '0.82rem', color: '#E8DACB', lineHeight: '1.4', display: 'block' }}>
-                    {dressCodeData.men}
-                  </span>
-                </div>
-
+              <p className="dc-subtitle">✦ DRESS CODE ✦</p>
+              <h3 className="dc-title">Código de Vestimenta</h3>
+              <div className="dc-header-divider">
+                <span className="line-small"></span>
+                <span style={{ fontSize: '8px' }}>❖</span>
+                <span className="line-small"></span>
               </div>
             </div>
 
-            {/* SECCIÓN COLORES RESERVADOS */}
-            <div className="inner-subcard" style={{ padding: '14px 12px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px', justifyContent: 'center' }}>
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#D4A373" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="12" r="10" />
-                  <line x1="4.93" y1="4.93" x2="19.07" y2="19.07" />
-                </svg>
-                <span style={{ fontSize: '0.72rem', color: '#FAF7F2', fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.8px', fontFamily: 'system-ui' }}>
-                  Reservados para la novia & novio:
-                </span>
+            {/* BLOQUE 2: DAMAS Y CABALLEROS */}
+            <div className="dc-columns-wrapper">
+              {/* Damas */}
+              <div className="dc-column">
+                <div className="dc-icon-box">
+                  <span style={{ fontSize: '9px' }}>✦</span>
+                  <svg className="dc-outline-icon" viewBox="0 0 100 100" fill="none" stroke="#C8A15A">
+                    <circle cx="50" cy="50" r="46" strokeWidth="1.5" />
+                    <path d="M42 26 L46 38 L36 80 H64 L54 38 L58 26 Z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M42 26 C46 31, 54 31, 58 26" strokeWidth="1.5"/>
+                    <path d="M46 38 C48 55, 38 75, 36 80" strokeWidth="1.5"/>
+                    <path d="M54 38 C52 55, 62 75, 64 80" strokeWidth="1.5"/>
+                  </svg>
+                  <span style={{ fontSize: '9px' }}>✦</span>
+                </div>
+                <h4 className="dc-column-title">Damas</h4>
+                <p className="dc-column-text">
+                  Luzcan su belleza con tacones y vestidos largos.
+                </p>
               </div>
 
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', flexWrap: 'wrap', gap: '6px', width: '100%' }}>
-                {dressCodeData.avoidColors.map((item, idx) => (
-                  <div key={idx} style={{ textAlign: 'center' }}>
+              {/* Línea vertical */}
+              <div className="dc-vertical-divider">
+                <span className="dc-vertical-line"></span>
+                <span style={{ fontSize: '8px', margin: '4px 0' }}>❖</span>
+                <span className="dc-vertical-line"></span>
+              </div>
+
+              {/* Caballeros */}
+              <div className="dc-column">
+                <div className="dc-icon-box">
+                  <span style={{ fontSize: '9px' }}>✦</span>
+                  <svg className="dc-outline-icon" viewBox="0 0 100 100" fill="none" stroke="#C8A15A">
+                    <circle cx="50" cy="50" r="46" strokeWidth="1.5" />
+                    <path d="M30 35 L40 28 L50 36 L60 28 L70 35 L68 78 L32 78 Z" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M40 28 L47 50 L50 78" strokeWidth="1.5"/>
+                    <path d="M60 28 L53 50 L50 78" strokeWidth="1.5"/>
+                    <polygon points="44,32 50,35 44,38" fill="#C8A15A"/>
+                    <polygon points="56,32 50,35 56,38" fill="#C8A15A"/>
+                    <circle cx="50" cy="35" r="1.5" fill="#C8A15A"/>
+                  </svg>
+                  <span style={{ fontSize: '9px' }}>✦</span>
+                </div>
+                <h4 className="dc-column-title">Caballeros</h4>
+                <p className="dc-column-text">
+                  Destaquen su elegancia con trajes en tonos oscuros.
+                </p>
+              </div>
+            </div>
+
+            {/* BLOQUE 3: COLORES RESERVADOS */}
+            <div className="dc-reserved-container">
+              <h5 className="dc-reserved-title">
+                🚫 RESERVADOS PARA LA NOVIA & NOVIO:
+              </h5>
+              <div className="dc-colors-row">
+                {avoidColors.map((item, idx) => (
+                  <div key={idx} className="dc-color-item">
                     <div 
-                      style={{ 
-                        width: '28px', 
-                        height: '28px', 
-                        backgroundColor: item.hex, 
-                        borderRadius: '50%', 
-                        boxShadow: '0 3px 8px rgba(0,0,0,0.3)',
-                        border: item.hex === '#ffffff' || item.hex === '#f5efe6' ? '1px solid #D1C2B2' : '2px solid rgba(255,255,255,0.4)',
-                        margin: '0 auto 4px auto'
-                      }} 
+                      className="dc-color-circle" 
+                      style={{ backgroundColor: item.hex }} 
                     />
-                    <span style={{ fontSize: '0.68rem', color: '#E8DACB', fontFamily: 'system-ui', display: 'block' }}>
-                      {item.name}
-                    </span>
+                    <span className="dc-color-name">{item.name}</span>
                   </div>
                 ))}
               </div>
             </div>
+
+            {/* BLOQUE 4: SOLO ADULTOS */}
+            <div className="dc-adults-container">
+              <svg className="dc-no-kids-svg" viewBox="0 0 100 100" fill="none" stroke="#C8A15A">
+                <circle cx="50" cy="50" r="44" strokeWidth="3" />
+                <line x1="20" y1="80" x2="80" y2="20" strokeWidth="3.5" />
+                <circle cx="38" cy="38" r="5" fill="#C8A15A" />
+                <path d="M32 60 V48 C32 44, 44 44, 44 48 V60" strokeWidth="2.5" />
+                <circle cx="62" cy="38" r="5" fill="#C8A15A" />
+                <path d="M56 60 V48 C56 44, 68 44, 68 48 V60" strokeWidth="2.5" />
+              </svg>
+
+              <div>
+                <h4 className="dc-adults-title">SOLO ADULTOS.</h4>
+                <p className="dc-adults-text">
+                  Por esta vez no aceptaremos la presencia de niños y/o adolescentes en la fiesta.
+                </p>
+              </div>
+            </div>
+
           </div>
 
-          {/* MESA DE REGALOS */}
-          <div>
-            <GiftRegistryCard />
-          </div>
+          {/* ================= 2. MESA DE REGALOS (SIMÉTRICA) ================= */}
+          <GiftRegistryCard />
 
         </div>
       </div>
