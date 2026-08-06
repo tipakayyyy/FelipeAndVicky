@@ -612,14 +612,9 @@ section { scroll-margin-top: 24px; }
 /* ============ GALLERY SECTION CON FONDO ============ */
 .gallery-section {
   width: 100%;
-  max-width: 100%;
-  /* Capa elegante translúcida + tu imagen de fondo */
-  background-image: 
-    linear-gradient(rgba(247, 241, 232, 0.88), rgba(247, 241, 232, 0.88)), 
-    url('/photos/fondo-galeria.jpg');
+  background-image: url('/photos/gallery.jpg') !important;
   background-size: cover;
   background-position: center;
-  background-repeat: no-repeat;
   padding: 4.5rem 1.4rem;
 }
 
