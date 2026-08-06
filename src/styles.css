@@ -609,15 +609,29 @@ section { scroll-margin-top: 24px; }
 }
 
 /* ============ GALLERY SECTION ============ */
+/* ============ GALLERY SECTION CON FONDO ============ */
 .gallery-section {
-  max-width: 1180px;
-  margin: 0 auto;
-  padding: 4.5rem 1.4rem;
   width: 100%;
+  max-width: 100%;
+  /* Capa elegante translúcida + tu imagen de fondo */
+  background-image: 
+    linear-gradient(rgba(247, 241, 232, 0.88), rgba(247, 241, 232, 0.88)), 
+    url('/photos/fondo-galeria.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 4.5rem 1.4rem;
 }
 
-.status-text { text-align: center; font-weight: 300; color: var(--ink-soft); padding: 2rem 1rem; }
-.status-text.error { color: var(--wine); font-weight: 500; }
+/* Mantiene el contenido y fotos alineados al centro */
+.gallery-header, 
+.gallery-masonry,
+.status-text,
+.load-more-wrap {
+  max-width: 1180px;
+  margin-left: auto;
+  margin-right: auto;
+}
 
 /* ============ MASONRY ============ */
 .gallery-masonry { column-count: 3; column-gap: 1.4rem; }
