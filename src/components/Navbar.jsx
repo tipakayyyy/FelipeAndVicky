@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { COUPLE } from '../constants'
 import { MenuIcon, CloseIcon } from './icons.jsx'
+import MusicPlayer from './MusicPlayer.jsx' // 👈 1. Importamos el reproductor aquí
 
-// 1. Quité la opción "Música" de la lista
+// 1. Lista de opciones del menú (sin la opción "Música")
 const LINKS = [
   { id: 'inicio', label: 'Inicio' },
   { id: 'historia', label: 'Historia' },
@@ -108,6 +109,9 @@ export default function Navbar({ activeSection }) {
           ))}
         </div>
       )}
+
+      {/* 🎵 2. AHORA SÍ: El reproductor se renderiza de forma independiente */}
+      <MusicPlayer />
     </>
   )
 }
