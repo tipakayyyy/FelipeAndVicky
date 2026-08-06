@@ -2,7 +2,6 @@ import { useEffect, useState, useCallback, useMemo } from 'react'
 import { supabase, TABLE_NAME } from './supabaseClient'
 import Navbar from './components/Navbar.jsx'
 import Home from './components/sections/Home.jsx'
-import MusicPlayer from './components/MusicPlayer.jsx'
 import OurStory from './components/sections/OurStory.jsx'
 import BigDay from './components/sections/BigDay.jsx'
 import InfoSection from './components/sections/InfoSection.jsx'
@@ -15,15 +14,14 @@ import Footer from './components/Footer.jsx'
 
 const PAGE_SIZE = 9
 
-// 🔄 Orden actualizado para coincidir con la secuencia visual de la página
+// 🔄 Lista de IDs exactos para que la navegación y el observador de scroll funcionen
 const SECTION_IDS = [
   'inicio',
-  'musica',
   'historia',
   'gran-dia',
   'asistencia',
   'informacion',
-  'galeria', // 👈 La galería ahora es el último id
+  'galeria',
 ]
 
 export default function App() {
@@ -138,24 +136,31 @@ export default function App() {
       <Navbar activeSection={activeSection} />
 
       {/* 1. Portada */}
-      <Home />
+      <section id="inicio">
+        <Home />
+      </section>
 
-      {/* 2. Reproductor de Música */}
-      <MusicPlayer />
+      {/* 2. Nuestra Historia */}
+      <section id="historia">
+        <OurStory />
+      </section>
 
-      {/* 3. Nuestra Historia */}
-      <OurStory />
+      {/* 3. Detalles del Gran Día */}
+      <section id="gran-dia">
+        <BigDay />
+      </section>
 
-      {/* 4. Detalles del Gran Día */}
-      <BigDay />
+      {/* 4. Confirmación de Asistencia */}
+      <section id="asistencia">
+        <Rsvp />
+      </section>
 
-      {/* 5. Confirmación de Asistencia */}
-      <Rsvp />
+      {/* 5. Información (Regalos) */}
+      <section id="informacion">
+        <InfoSection />
+      </section>
 
-      {/* 6. Información (Vestimenta & Mesa de Regalos) */}
-      <InfoSection />
-
-      {/* 📸 7. GALERÍA COMPARTIDA (AHORA AL FINAL) */}
+      {/* 📸 6. GALERÍA COMPARTIDA */}
       <section id="galeria" className="gallery-section">
         <GalleryHeader
           stats={stats}

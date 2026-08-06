@@ -14,13 +14,18 @@
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; }
+html { 
+  scroll-behavior: smooth; 
+  overflow-x: hidden; /* Evita que la pantalla se mueva a los lados en celular */
+}
 
 body {
   font-family: 'Inter', sans-serif;
   background: var(--cream);
   color: var(--ink);
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 h1, h2, .display { font-family: 'Cormorant Garamond', 'Playfair Display', serif; }
@@ -32,7 +37,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 img, video { max-width: 100%; display: block; }
 a { color: inherit; text-decoration: none; }
 
-.page { min-height: 100vh; display: flex; flex-direction: column; }
+.page { min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
 
 section { scroll-margin-top: 24px; }
 
@@ -173,7 +178,7 @@ section { scroll-margin-top: 24px; }
   align-items: center;
   justify-content: space-between;
   padding: 1rem 1.2rem;
-  background: rgba(61, 13, 11, 0.55);
+  background: rgba(61, 13, 11, 0.85);
   backdrop-filter: blur(8px);
 }
 
@@ -267,7 +272,16 @@ section { scroll-margin-top: 24px; }
 .story-section, .info-section {
   padding: 6rem 1.5rem;
 }
-.story-section { background: var(--cream); min-height: 100vh; display: flex; align-items: center; }
+
+.story-section { 
+  background: var(--cream); 
+  min-height: 100vh; 
+  display: flex; 
+  align-items: center;
+  background-size: cover;
+  background-position: center;
+}
+
 .info-section {
   background: linear-gradient(180deg, var(--wine) 0%, var(--wine-deep) 100%);
   color: var(--cream);
@@ -708,7 +722,7 @@ section { scroll-margin-top: 24px; }
   font-size: 0.8rem;
   font-weight: 500;
   padding: 0.65rem 0.6rem;
-  border-radius: 9px;
+  border-radius: 999px;
   border: 1px solid rgba(111, 29, 24, 0.2);
   background: var(--cream);
   color: var(--ink-soft);
@@ -805,60 +819,6 @@ section { scroll-margin-top: 24px; }
 .footer-top-btn { margin-top: 2.2rem; border-color: var(--gold-soft); color: var(--cream); }
 .footer-top-btn:hover { background: var(--gold-soft); color: var(--wine-deep); }
 
-/* ============ MÚSICA (sección completa) ============ */
-.music-section {
-  position: relative;
-  background: linear-gradient(180deg, var(--wine-deep) 0%, #2a0908 100%);
-  color: var(--cream);
-  padding: 6rem 1.5rem;
-  min-height: 90vh;
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-}
-.botanical-dark { color: rgba(226, 201, 148, 0.28); }
-
-.music-grid {
-  position: relative;
-  max-width: 1100px;
-  margin: 0 auto;
-  width: 100%;
-  display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
-  gap: 3rem;
-  align-items: center;
-}
-
-.music-sub {
-  font-size: 1rem;
-  font-weight: 300;
-  color: rgba(247, 241, 232, 0.78);
-  max-width: 28rem;
-  margin-bottom: 2rem;
-}
-
-.music-embed {
-  border-radius: 14px;
-  overflow: hidden;
-  border: 1px solid rgba(226, 201, 148, 0.25);
-  box-shadow: 0 24px 50px -24px rgba(0, 0, 0, 0.6);
-}
-.music-embed iframe { display: block; }
-
-.music-media { position: relative; border-radius: 8px; overflow: hidden; min-height: 320px; }
-.music-photo { width: 100%; height: 100%; object-fit: cover; min-height: 320px; }
-.music-media-fallback {
-  width: 100%; min-height: 320px; border-radius: 8px;
-  background: radial-gradient(circle at 40% 30%, rgba(226,201,148,0.18), transparent 60%);
-  border: 1px solid rgba(226, 201, 148, 0.2);
-}
-
-@media (max-width: 900px) {
-  .music-grid { grid-template-columns: 1fr; }
-  .music-media { order: -1; min-height: 220px; }
-  .music-photo, .music-media-fallback { min-height: 220px; }
-}
-
 /* ============ ASISTENCIA / RSVP ============ */
 .rsvp-section {
   background: var(--cream);
@@ -950,6 +910,14 @@ section { scroll-margin-top: 24px; }
 }
 
 @media (max-width: 720px) {
+  /* 📱 CORRECCIÓN DE FONDO EN SAFARI IPHONE */
+  .story-section, 
+  .our-story {
+    background-attachment: scroll !important;
+    background-size: cover !important;
+    background-position: center !important;
+  }
+
   .navbar-mobile-menu {
     display: flex; flex-direction: column;
     position: fixed; top: 58px; left: 0; right: 0; z-index: 49;
@@ -976,7 +944,6 @@ section { scroll-margin-top: 24px; }
   .masonry-item { margin-bottom: 0.8rem; }
   .btn-share { width: 100%; padding: 1rem 1.4rem; font-size: 1rem; }
   .filter-bar { justify-content: flex-start; }
-  .category-toggle { flex-direction: column; }
 
   .story-photos { grid-template-columns: 1fr !important; }
   .timeline-track { flex-direction: column !important; gap: 1.8rem !important; }
