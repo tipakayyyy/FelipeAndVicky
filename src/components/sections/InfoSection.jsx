@@ -75,7 +75,7 @@ export function GiftRegistryCard() {
 
       {/* BLOQUE 3: PAGO EN LÍNEA (CONTENEDOR OSCURO) */}
       <div className="gift-subcard">
-        <h5 className="gift-subcard-title">💳 PAGO CON TARJETA DE CRÉDITO / DÉBITO</h5>
+        <h5 className="gift-subcard-title">💳 APORTA CON TARJETA DE CRÉDITO / DÉBITO</h5>
         <p className="gift-subcard-text">Plataforma segura e inmediata en línea</p>
         <button
           type="button"
@@ -83,7 +83,7 @@ export function GiftRegistryCard() {
           onClick={handleOpenMercadoPago}
         >
           <CardIcon color="#3D0D0B" size={19} />
-          <span>Pagar con Tarjeta en Línea</span>
+          <span>Aporta con Tarjeta en Línea</span>
         </button>
       </div>
 
