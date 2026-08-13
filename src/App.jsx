@@ -134,126 +134,128 @@ export default function App() {
   const hasMore = filteredItems.length > visibleCount
 
   return (
-    <div className="page">
-      <style>{`
-        /* 🛠️ RESET GLOBAL DE MÁRGENES Y ENCUADRE CON NAVBAR */
-        html, body {
-          margin: 0 !important;
-          padding: 0 !important;
-          width: 100% !important;
-          overflow-x: hidden;
-        }
-
-        .page {
-          width: 100%;
-          min-height: 100vh;
-          margin: 0;
-          padding: 0;
-        }
-
-        /* CONTENEDOR PRINCIPAL: Pegado al Navbar lateral de 62px */
-        .app-main {
-          margin-left: 62px !important;
-          width: calc(100% - 62px) !important;
-          max-width: none !important;
-          padding: 0 !important;
-        }
-
-        /* RESPONSIVE EN CELULARES */
-        @media (max-width: 900px) {
-          .app-main {
-            margin-left: 0 !important;
+    <>
+      <div className="page">
+        <style>{`
+          /* 🛠️ RESET GLOBAL DE MÁRGENES Y ENCUADRE CON NAVBAR */
+          html, body {
+            margin: 0 !important;
+            padding: 0 !important;
             width: 100% !important;
+            overflow-x: hidden;
           }
-        }
-      `}</style>
 
-      {/* 1. Navbar lateral fijo (62px de ancho) */}
-      <Navbar activeSection={activeSection} />
+          .page {
+            width: 100%;
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+          }
 
-      {/* 🎵 Reproductor flotante de música */}
-      <MusicPlayer />
+          /* CONTENEDOR PRINCIPAL: Pegado al Navbar lateral de 62px */
+          .app-main {
+            margin-left: 62px !important;
+            width: calc(100% - 62px) !important;
+            max-width: none !important;
+            padding: 0 !important;
+          }
 
-      {/* 2. Área principal alineada sin espacios sobrantes */}
-      <main className="app-main">
-        {/* 1. Portada */}
-        <section id="inicio">
-          <Home />
-        </section>
+          /* RESPONSIVE EN CELULARES */
+          @media (max-width: 900px) {
+            .app-main {
+              margin-left: 0 !important;
+              width: 100% !important;
+            }
+          }
+        `}</style>
 
-        {/* ⏰ Contador de tiempo y agendar fecha */}
-        <WeddingCountdown />
+        {/* 1. Navbar lateral fijo (62px de ancho) */}
+        <Navbar activeSection={activeSection} />
 
-        {/* 2. Nuestra Historia */}
-        <section id="historia">
-          <OurStory />
-        </section>
+        {/* 2. Área principal alineada sin espacios sobrantes */}
+        <main className="app-main">
+          {/* 1. Portada */}
+          <section id="inicio">
+            <Home />
+          </section>
 
-        {/* 3. Detalles del Gran Día */}
-        <section id="gran-dia">
-          <BigDay />
-        </section>
+          {/* ⏰ Contador de tiempo y agendar fecha */}
+          <WeddingCountdown />
 
-        {/* 4. Confirmación de Asistencia */}
-        <section id="asistencia">
-          <Rsvp />
-        </section>
+          {/* 2. Nuestra Historia */}
+          <section id="historia">
+            <OurStory />
+          </section>
 
-        {/* 5. Información (Regalos) */}
-        <section id="informacion">
-          <InfoSection />
-        </section>
+          {/* 3. Detalles del Gran Día */}
+          <section id="gran-dia">
+            <BigDay />
+          </section>
 
-        {/* 📸 6. GALERÍA COMPARTIDA */}
-        <section id="galeria" className="gallery-section">
-          <GalleryHeader
-            stats={stats}
-            onOpenUpload={() => setIsUploadOpen(true)}
-            activeFilter={activeFilter}
-            onSelectFilter={handleSelectFilter}
-          />
+          {/* 4. Confirmación de Asistencia */}
+          <section id="asistencia">
+            <Rsvp />
+          </section>
 
-          {loading && <p className="status-text">Cargando el álbum…</p>}
-          {loadError && (
-            <p className="status-text error">
-              No pudimos cargar la galería: {loadError}
-            </p>
-          )}
-          {!loading && !loadError && filteredItems.length === 0 && (
-            <p className="status-text">
-              {items.length === 0
-                ? 'Aún no hay fotos ni videos — ¡sé el primero en compartir un momento!'
-                : 'No hay momentos en esta categoría todavía.'}
-            </p>
-          )}
+          {/* 5. Información (Regalos) */}
+          <section id="informacion">
+            <InfoSection />
+          </section>
 
-          <Gallery
-            items={visibleItems}
-            onSelect={setActiveIndex}
-            hasMore={hasMore}
-            onLoadMore={() => setVisibleCount((c) => c + PAGE_SIZE)}
-          />
-        </section>
+          {/* 📸 6. GALERÍA COMPARTIDA */}
+          <section id="galeria" className="gallery-section">
+            <GalleryHeader
+              stats={stats}
+              onOpenUpload={() => setIsUploadOpen(true)}
+              activeFilter={activeFilter}
+              onSelectFilter={handleSelectFilter}
+            />
 
-        {/* Pie de Página */}
-        <Footer />
-      </main>
+            {loading && <p className="status-text">Cargando el álbum…</p>}
+            {loadError && (
+              <p className="status-text error">
+                No pudimos cargar la galería: {loadError}
+              </p>
+            )}
+            {!loading && !loadError && filteredItems.length === 0 && (
+              <p className="status-text">
+                {items.length === 0
+                  ? 'Aún no hay fotos ni videos — ¡sé el primero en compartir un momento!'
+                  : 'No hay momentos en esta categoría todavía.'}
+              </p>
+            )}
 
-      {/* Modales Flotantes */}
-      <UploadModal
-        isOpen={isUploadOpen}
-        onClose={() => setIsUploadOpen(false)}
-        onUploaded={handleUploaded}
-      />
+            <Gallery
+              items={visibleItems}
+              onSelect={setActiveIndex}
+              hasMore={hasMore}
+              onLoadMore={() => setVisibleCount((c) => c + PAGE_SIZE)}
+            />
+          </section>
 
-      {activeIndex !== null && (
-        <Lightbox
-          items={visibleItems}
-          activeIndex={activeIndex}
-          onClose={() => setActiveIndex(null)}
-          onNavigate={setActiveIndex}
+          {/* Pie de Página */}
+          <Footer />
+        </main>
+
+        {/* Modales Flotantes */}
+        <UploadModal
+          isOpen={isUploadOpen}
+          onClose={() => setIsUploadOpen(false)}
+          onUploaded={handleUploaded}
         />
-      )}
-    </div>
+
+        {activeIndex !== null && (
+          <Lightbox
+            items={visibleItems}
+            activeIndex={activeIndex}
+            onClose={() => setActiveIndex(null)}
+            onNavigate={setActiveIndex}
+          />
+        )}
+      </div>
+
+      {/* 🎵 Reproductor flotante de música (Aislado fuera de .page para evitar bugs de WebKit) */}
+      <MusicPlayer />
+    </>
   )
 }
