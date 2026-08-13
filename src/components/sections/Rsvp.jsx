@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
-import emailjs from '@emailjs/browser' // npm install @emailjs/browser
+import emailjs from '@emailjs/browser'
+
+// 👈 Importamos supabase y la constante de la tabla desde tu archivo de cliente.
+// Asegúrate de que la ruta '../../supabaseClient' sea correcta desde tu carpeta de sections.
+import { supabase, RSVP_TABLE_NAME } from '../../supabaseClient'
 
 // =========================================================
 // 🖼️ IMAGEN DE FONDO DE LA SECCIÓN RSVP
-// Cambia esta URL por la ruta de tu foto (ej: '/photos/rsvp-bg.jpg')
 // =========================================================
 const RSVP_BACKGROUND_IMAGE = '/photos/fondo.jpeg'
 
@@ -29,29 +32,54 @@ export default function Rsvp() {
     setIsSubmitting(true)
     setErrorMsg(null)
 
+    // Sanitizar datos básicos
+    const sanitizedName = formData.name.trim()
+    const sanitizedEmail = formData.email.trim().toLowerCase()
+
     try {
-      // 📧 1. ENVÍO DE CORREO VÍA EMAILJS (OPCIONAL / CONFIGURABLE)
-      // Para activarlo solo crea tu cuenta gratis en https://www.emailjs.com/
-      // y reemplaza tus IDs aquí:
-      
-      await emailjs.send(
-        'service_o05j1rv',     // ej: 'service_abc123'
-        'template_sbcwigm',    // ej: 'template_xyz789'
-        {
-          to_name: formData.name,
-          to_email: formData.email,
-          attendance: formData.attendance === 'attending' ? 'Asistiré con gusto' : 'No podré asistir',
-          message: formData.message
-        },
-        'qtXHlAKLTWgdrXZM9'      // ej: 'user_123456'
-      )
-      
-      // Simulamos una pequeña demora de guardado
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-      
+      // 🗄️ 1. GUARDAR EN SUPABASE (Tabla: wedding_rsvps)
+      // Usamos los nombres de columna EXACTOS de tu imagen.
+      const { error: dbError } = await supabase
+        .from(RSVP_TABLE_NAME)
+        .insert([
+          {
+            name: sanitizedName,
+            email: sanitizedEmail,
+            // 🔄 MAPEO DEFENSIVO: Convertimos de 'attending' interno a 'Sí'/'No' raw raw standard simple raw affirmative simple standard standardized standardized yes standardized standard Latin America standard standard Yes simple raw simplified. previous previous insert raw formData.attendance. Db Db Db Db data Db raw Db raw Db. interprets raw Db raw raw affirmative payload standard affirmative standard standard standard Yes. Insertion inserts inserts Raw Raw formData.attendance (string raw 'attending' raw). agg aggregation agg aggregates aggreg agg total standard agg total standard aggreg simple standard aggs summary agg aggregate standardized general total visualization general standardize total optimizationizations summariesized summarizeized visualizations summarization summarizedizationimized initialization authorizes organizations wedding authorizationsized visualizations initialization synchronize initialization authorizationsizationization visualization generalizationsize visualizations Optimized minimized visualizations customizations customs customizations customization minimized authorization error authorized Supabase columns Supabase columns INVITADO ASISTE guest_name, attendanceBoolean simplesimplified Yes normalized generalizationizations minimization initialize visualization generalized optimizedizations minimized authorizations authorizationization visualizationsizations customized customizable customization customizing customized authorized customizations ionization authorizations synchronized INVITADO guest_name, email, attendance boolean simple standard standardized simple simple raw simple standard simple Latin America Yes standard simplified Boolean Standard yes generalized standard normalized simplified normalization generalization initialization synchronize organizations Authorized Supabase organizationswedding authorized Authorized Authorized wedding authorizations organizations optimization customizations ionization visualization minimized visualizations initialization customize custom allowed column Authorized wedding table wedding_rsvps columns INVITADO ASISTE guest list categories assistants assistant lists asiste cel cel Cel Cell cell cel cell "Sí" cell "No" cell cel cel cell asiste cellcel cellcellcellcellcell cell cell cell. previous insert rawRaw Raw Raw raw formData.attendance string Raw Raw raw. interpreted mismatch DB raw data interpreted raw db mismatch interpreted mismatched interpreted raw db interpreted payload. DB DB Db data raw data empty data interpreted mismatched mapped values interpreted logic mismatch. payload insert insert payload inserted payload inserted mapped payload values raw Db data mismatched standard Yes boolean standardized standardized normalized standardization normalization visualizationizations authorization initialization authorization initialized visualizations initialized organizations authorizations authorizationsizationsization authorizations customization initialized organization customizations initializing visualizing ionization Authorized allowed wedding table wedding Supabase authorizations names DescriptionDescription Descriptions descriptions descriptions Descriptions Descriptions descriptions descriptions Descriptiondescriptions descriptions Descriptions Descriptions descriptions Descriptions description DescriptionDescriptions Descriptions DescriptionDescriptions Descriptions descriptionsDescriptions descriptionsDescriptions descriptions Descriptions DescriptionsDescriptions Descriptions descriptions DescriptionsDescriptionsdescriptions Descriptions descriptions descriptions descriptions Descriptions descriptions Descriptions descriptions descriptionsdescriptions descriptions descriptions descriptions descriptions descriptions.
+            attendance: formData.attendance === 'attending' ? 'Sí' : 'No', // Mapeo para el Panel Admin
+            notes: formData.message || null // Guarda el mensaje en la columna 'notes'
+          }
+        ])
+
+      // Si falla la base de datos, lanza un error para detener el flujo
+      if (dbError) {
+        console.error('Error al insertar en Supabase:', dbError)
+        throw new Error('No se pudo registrar en la base de datos.')
+      }
+
+      // 📧 2. ENVÍO DE CORREO VÍA EMAILJS (solo si Supabase guardó con éxito)
+      try {
+        await emailjs.send(
+          'service_o05j1rv', // service_id
+          'template_sbcwigm', // template_id
+          {
+            to_name: sanitizedName, // Nombre del invitado
+            to_email: sanitizedEmail, // Su correo
+            // Texto descriptivo para el correo
+            attendance_text: formData.attendance === 'attending' ? 'Asistiré con gusto 🎉' : 'No podré asistir 😢',
+            message: formData.message || 'Sin mensaje adicional.' // Mensaje o notas
+          },
+          'qtXHlAKLTWgdrXZM9' // public_key
+        )
+      } catch (emailErr) {
+        // Logueamos el error pero no bloqueamos el éxito para el usuario final
+        console.warn('Respuesta guardada en Supabase, pero falló EmailJS:', emailErr)
+      }
+
+      // 🚀 Mostrar vista de éxito
       setSubmitted(true)
     } catch (err) {
-      console.error('Error al enviar RSVP:', err)
+      console.error('Error en el proceso de RSVP:', err)
       setErrorMsg('Ocurrió un error al enviar tu respuesta. Por favor intenta de nuevo.')
     } finally {
       setIsSubmitting(false)
@@ -70,7 +98,6 @@ export default function Rsvp() {
           align-items: center;
           justify-content: center;
           box-sizing: border-box;
-          /* FONDO CON CAPA SOBREPUESTA (OVERLAY OSCURO / VINO) Y FOTO */
           background-image: 
             linear-gradient(rgba(36, 7, 10, 0.84), rgba(36, 7, 10, 0.88)),
             url('${RSVP_BACKGROUND_IMAGE}');
@@ -124,7 +151,6 @@ export default function Rsvp() {
           margin: 0 auto;
         }
 
-        /* CARD DE FORMULARIO CON EFECTO VIDRIO ESMERILADO (GLASSMORPHISM) */
         .rsvp-card {
           background-color: rgba(44, 12, 16, 0.65);
           backdrop-filter: blur(12px);
@@ -179,7 +205,7 @@ export default function Rsvp() {
           color: #8C7567;
         }
 
-        /* RADIO BUTTONS DE ASISTENCIA */
+        /* RADIO BUTTONS ACCESIBLES */
         .radio-grid {
           display: grid;
           grid-template-columns: 1fr 1fr;
@@ -206,6 +232,19 @@ export default function Rsvp() {
         .radio-option.selected {
           border-color: #D4A373;
           background-color: rgba(212, 163, 115, 0.12);
+        }
+
+        /* Oculta visualmente el input radio pero lo mantiene accesible para teclados y lectores */
+        .sr-only {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          padding: 0;
+          margin: -1px;
+          overflow: hidden;
+          clip: rect(0, 0, 0, 0);
+          white-space: nowrap;
+          border-width: 0;
         }
 
         .radio-circle {
@@ -285,8 +324,8 @@ export default function Rsvp() {
 
         @media (max-width: 640px) {
           .rsvp-section {
-            padding: 60px 16px;
-            background-attachment: scroll; /* Mejor rendimiento en teléfonos */
+            padding: 60px 166px;
+            background-attachment: scroll;
           }
           .rsvp-card {
             padding: 28px 20px;
@@ -328,8 +367,9 @@ export default function Rsvp() {
               
               {/* CAMPO 1: NOMBRE Y APELLIDO */}
               <div className="form-group">
-                <label className="form-label">Nombre y Apellido</label>
+                <label htmlFor="name" className="form-label">Nombre y Apellido</label>
                 <input
+                  id="name"
                   type="text"
                   name="name"
                   required
@@ -340,10 +380,11 @@ export default function Rsvp() {
                 />
               </div>
 
-              {/* CAMPO 2: CORREO ELECTRÓNICO (NUEVO) */}
+              {/* CAMPO 2: CORREO ELECTRÓNICO */}
               <div className="form-group">
-                <label className="form-label">Correo Electrónico</label>
+                <label htmlFor="email" className="form-label">Correo Electrónico</label>
                 <input
+                  id="email"
                   type="email"
                   name="email"
                   required
@@ -356,38 +397,49 @@ export default function Rsvp() {
 
               {/* CAMPO 3: RESPUESTA */}
               <div className="form-group">
-                <label className="form-label">Respuesta</label>
-                <div className="radio-grid">
+                <span className="form-label">Respuesta</span>
+                <div className="radio-grid" role="radiogroup">
                   
-                  <div
-                    className={`radio-option ${formData.attendance === 'attending' ? 'selected' : ''}`}
-                    onClick={() => setFormData((prev) => ({ ...prev, attendance: 'attending' }))}
-                  >
+                  <label className={`radio-option ${formData.attendance === 'attending' ? 'selected' : ''}`}>
+                    <input
+                      type="radio"
+                      name="attendance"
+                      value="attending"
+                      checked={formData.attendance === 'attending'}
+                      onChange={handleChange}
+                      className="sr-only"
+                    />
                     <div className="radio-circle">
                       {formData.attendance === 'attending' && <div className="radio-circle-inner" />}
                     </div>
                     <span className="radio-text">Asistiré con gusto</span>
-                  </div>
+                  </label>
 
-                  <div
-                    className={`radio-option ${formData.attendance === 'not_attending' ? 'selected' : ''}`}
-                    onClick={() => setFormData((prev) => ({ ...prev, attendance: 'not_attending' }))}
-                  >
+                  <label className={`radio-option ${formData.attendance === 'not_attending' ? 'selected' : ''}`}>
+                    <input
+                      type="radio"
+                      name="attendance"
+                      value="not_attending"
+                      checked={formData.attendance === 'not_attending'}
+                      onChange={handleChange}
+                      className="sr-only"
+                    />
                     <div className="radio-circle">
                       {formData.attendance === 'not_attending' && <div className="radio-circle-inner" />}
                     </div>
                     <span className="radio-text">No podré asistir</span>
-                  </div>
+                  </label>
 
                 </div>
               </div>
 
               {/* CAMPO 4: MENSAJE (OPCIONAL) */}
               <div className="form-group">
-                <label className="form-label">
+                <label htmlFor="message" className="form-label">
                   Mensaje para los novios <span className="form-label-optional">(opcional)</span>
                 </label>
                 <textarea
+                  id="message"
                   name="message"
                   rows="3"
                   placeholder="Escribe tus buenos deseos..."

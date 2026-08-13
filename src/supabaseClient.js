@@ -2,7 +2,6 @@ import { createClient } from '@supabase/supabase-js'
 
 // Intentar leer de .env o usar las llaves directas de respaldo
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://uoyflugqjfuwrjzukach.supabase.co"
-
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVveWZsdWdxamZ1d3JqenVrYWNoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODU4MDI3NTUsImV4cCI6MjEwMTM3ODc1NX0.yv2-psk8Tk6Hg8kdoICpXZOnsPj1VvtTqNaRKCUrMuw"
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey)

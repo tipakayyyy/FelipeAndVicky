@@ -58,7 +58,6 @@ function PhotosTab() {
   const [deletingId, setDeletingId] = useState(null)
   const [downloadingId, setDownloadingId] = useState(null)
 
-  // 📥 Función para forzar la descarga del archivo en lugar de solo abrirlo
   const handleDownload = async (item) => {
     const url = item.media_url || item.url || item.file_url
     if (!url) return alert('No se encontró la URL del archivo.')
@@ -68,7 +67,6 @@ function PhotosTab() {
       const response = await fetch(url)
       const blob = await response.blob()
 
-      // Detectar extensión
       const extension = url.split('.').pop().split('?')[0] || 'jpg'
       const fileName = `${item.name || 'boda-recuerdo'}-${item.id}.${extension}`
 
@@ -82,7 +80,6 @@ function PhotosTab() {
       window.URL.revokeObjectURL(blobUrl)
     } catch (error) {
       console.error('Error al descargar:', error)
-      // Si falla por seguridad del navegador, se abre en pestaña nueva
       window.open(url, '_blank')
     } finally {
       setDownloadingId(null)
@@ -90,17 +87,22 @@ function PhotosTab() {
   }
 
   const handleDelete = async (item) => {
-    if (!window.confirm(`¿Eliminar "${item.name}"? Esta acción no se puede deshacer.`)) return
+    if (!window.confirm(`¿Eliminar "${item.name || 'este elemento'}"? Esta acción no se puede deshacer.`)) return
     setDeletingId(item.id)
-    if (item.file_path) {
-      await supabase.storage.from(BUCKET_NAME).remove([item.file_path])
+    try {
+      if (item.file_path) {
+        await supabase.storage.from(BUCKET_NAME).remove([item.file_path])
+      }
+      const { error } = await supabase.from(TABLE_NAME).delete().eq('id', item.id)
+      if (error) alert(`Error al eliminar: ${error.message}`)
+      else await refetch()
+    } catch (err) {
+      console.error('Error:', err)
+    } finally {
+      setDeletingId(null)
     }
-    await supabase.from(TABLE_NAME).delete().eq('id', item.id)
-    setDeletingId(null)
-    refetch()
   }
 
-  // Helper para verificar si es video
   const isVideo = (item) => {
     const url = (item.media_url || item.url || '').toLowerCase()
     return (
@@ -135,7 +137,6 @@ function PhotosTab() {
                 {item.created_at ? new Date(item.created_at).toLocaleString('es-PE') : ''}
               </p>
 
-              {/* ACCIONES: DESCARGAR Y ELIMINAR */}
               <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
                 <button
                   type="button"
@@ -169,46 +170,47 @@ function RsvpsTab() {
   const { items, loading, refetch } = useRsvps()
   const [busyId, setBusyId] = useState(null)
 
+  const checkIsAttending = (r) => {
+    const val = (r.attendance || '').toLowerCase()
+    return val === 'attending' || val === 'sí' || val === 'si' || r.attending === true
+  }
+
   const stats = useMemo(() => {
-    const attending = items.filter((r) => r.attending)
-    const notAttending = items.filter((r) => !r.attending)
-    const plusOnesApproved = items.filter((r) => r.plus_one_status === 'approved').length
-    const plusOnesPending = items.filter(
-      (r) => r.plus_one_requested && r.plus_one_status === 'pending'
-    ).length
+    const attending = items.filter(checkIsAttending)
+    const notAttending = items.filter((r) => !checkIsAttending(r))
     return {
       attending: attending.length,
       notAttending: notAttending.length,
       total: items.length,
-      plusOnesApproved,
-      plusOnesPending,
     }
   }, [items])
-
-  const updateStatus = async (id, status) => {
-    setBusyId(id)
-    await supabase.from(RSVP_TABLE_NAME).update({ plus_one_status: status }).eq('id', id)
-    setBusyId(null)
-    refetch()
-  }
 
   const handleDelete = async (id, name) => {
     if (!window.confirm(`¿Eliminar la confirmación de "${name}"?`)) return
     setBusyId(id)
-    await supabase.from(RSVP_TABLE_NAME).delete().eq('id', id)
+
+    const { error } = await supabase
+      .from(RSVP_TABLE_NAME)
+      .delete()
+      .eq('id', id)
+
+    if (error) {
+      console.error('Error al eliminar de Supabase:', error)
+      alert(`Error al eliminar: ${error.message}`)
+    } else {
+      await refetch()
+    }
+
     setBusyId(null)
-    refetch()
   }
 
   if (loading) return <p className="status-text">Cargando confirmaciones…</p>
 
   return (
     <div>
-      <div className="admin-stats-row">
+      <div className="admin-stats-row" style={{ gridTemplateColumns: 'repeat(2, 1fr)', maxWidth: '480px' }}>
         <div className="admin-stat"><span>{stats.attending}</span>Asistirán</div>
         <div className="admin-stat"><span>{stats.notAttending}</span>No asistirán</div>
-        <div className="admin-stat"><span>{stats.plusOnesPending}</span>+1 pendientes</div>
-        <div className="admin-stat"><span>{stats.plusOnesApproved}</span>+1 aprobados</div>
       </div>
 
       <div className="admin-table-wrap">
@@ -217,60 +219,44 @@ function RsvpsTab() {
             <tr>
               <th>Invitado</th>
               <th>Asiste</th>
-              <th>Acompañante</th>
-              <th>Estado +1</th>
+              <th>Mensaje / Nota</th>
               <th>Fecha</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
             {items.length === 0 && (
-              <tr><td colSpan={6} className="status-text">Aún no hay confirmaciones.</td></tr>
+              <tr><td colSpan={5} className="status-text">Aún no hay confirmaciones.</td></tr>
             )}
-            {items.map((r) => (
-              <tr key={r.id}>
-                <td>{r.guest_name}</td>
-                <td>{r.attending ? 'Sí' : 'No'}</td>
-                <td>{r.plus_one_requested ? (r.plus_one_name || '—') : '—'}</td>
-                <td>
-                  {r.plus_one_requested ? (
-                    <span className={'admin-badge admin-badge-' + r.plus_one_status}>
-                      {r.plus_one_status === 'pending' && 'Pendiente'}
-                      {r.plus_one_status === 'approved' && 'Aprobado'}
-                      {r.plus_one_status === 'rejected' && 'Rechazado'}
+            {items.map((r) => {
+              const guestName = r.name || r.guest_name || 'Invitado'
+              const isAttending = checkIsAttending(r)
+
+              return (
+                <tr key={r.id}>
+                  <td>
+                    <div><strong>{guestName}</strong></div>
+                    {r.email && <small style={{ color: '#888' }}>{r.email}</small>}
+                  </td>
+                  <td>
+                    <span style={{ color: isAttending ? '#2e7d32' : '#c62828', fontWeight: 'bold' }}>
+                      {isAttending ? 'Sí' : 'No'}
                     </span>
-                  ) : '—'}
-                </td>
-                <td>{new Date(r.created_at).toLocaleDateString('es-PE')}</td>
-                <td className="admin-row-actions">
-                  {r.plus_one_requested && r.plus_one_status !== 'approved' && (
+                  </td>
+                  <td>{r.notes || r.message || '—'}</td>
+                  <td>{r.created_at ? new Date(r.created_at).toLocaleDateString('es-PE') : '—'}</td>
+                  <td className="admin-row-actions">
                     <button
-                      className="btn-mini btn-mini-approve"
+                      className="btn-mini btn-mini-delete"
                       disabled={busyId === r.id}
-                      onClick={() => updateStatus(r.id, 'approved')}
+                      onClick={() => handleDelete(r.id, guestName)}
                     >
-                      Aprobar
+                      {busyId === r.id ? '...' : 'Eliminar'}
                     </button>
-                  )}
-                  {r.plus_one_requested && r.plus_one_status !== 'rejected' && (
-                    <button
-                      className="btn-mini btn-mini-reject"
-                      disabled={busyId === r.id}
-                      onClick={() => updateStatus(r.id, 'rejected')}
-                    >
-                      Rechazar
-                    </button>
-                  )}
-                  <button
-                    className="btn-mini btn-mini-delete"
-                    disabled={busyId === r.id}
-                    onClick={() => handleDelete(r.id, r.guest_name)}
-                  >
-                    Eliminar
-                  </button>
-                </td>
-              </tr>
-            ))}
+                  </td>
+                </tr>
+              )
+            })}
           </tbody>
         </table>
       </div>
@@ -286,7 +272,7 @@ export default function AdminDashboard({ session }) {
       <header className="admin-header">
         <div>
           <h1>Panel — Felipe &amp; Victoria</h1>
-          <p>{session.user.email}</p>
+          <p>{session?.user?.email}</p>
         </div>
         <button className="btn btn-outline" onClick={() => supabase.auth.signOut()}>
           Cerrar sesión
