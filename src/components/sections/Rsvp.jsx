@@ -1,20 +1,14 @@
 import React, { useState } from 'react'
 import emailjs from '@emailjs/browser'
-
-// 👈 Importamos supabase y la constante de la tabla desde tu archivo de cliente.
-// Asegúrate de que la ruta '../../supabaseClient' sea correcta desde tu carpeta de sections.
 import { supabase, RSVP_TABLE_NAME } from '../../supabaseClient'
 
-// =========================================================
-// 🖼️ IMAGEN DE FONDO DE LA SECCIÓN RSVP
-// =========================================================
 const RSVP_BACKGROUND_IMAGE = '/photos/fondo.jpeg'
 
 export default function Rsvp() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    attendance: 'attending', // 'attending' | 'not_attending'
+    attendance: 'attending',
     message: ''
   })
 
@@ -32,54 +26,47 @@ export default function Rsvp() {
     setIsSubmitting(true)
     setErrorMsg(null)
 
-    // Sanitizar datos básicos
     const sanitizedName = formData.name.trim()
     const sanitizedEmail = formData.email.trim().toLowerCase()
 
     try {
-      // 🗄️ 1. GUARDAR EN SUPABASE (Tabla: wedding_rsvps)
-      // Usamos los nombres de columna EXACTOS de tu imagen.
+      // 1. Guardar en Supabase
       const { error: dbError } = await supabase
         .from(RSVP_TABLE_NAME)
         .insert([
           {
             name: sanitizedName,
             email: sanitizedEmail,
-            // 🔄 MAPEO DEFENSIVO: Convertimos de 'attending' interno a 'Sí'/'No' raw raw standard simple raw affirmative simple standard standardized standardized yes standardized standard Latin America standard standard Yes simple raw simplified. previous previous insert raw formData.attendance. Db Db Db Db data Db raw Db raw Db. interprets raw Db raw raw affirmative payload standard affirmative standard standard standard Yes. Insertion inserts inserts Raw Raw formData.attendance (string raw 'attending' raw). agg aggregation agg aggregates aggreg agg total standard agg total standard aggreg simple standard aggs summary agg aggregate standardized general total visualization general standardize total optimizationizations summariesized summarizeized visualizations summarization summarizedizationimized initialization authorizes organizations wedding authorizationsized visualizations initialization synchronize initialization authorizationsizationization visualization generalizationsize visualizations Optimized minimized visualizations customizations customs customizations customization minimized authorization error authorized Supabase columns Supabase columns INVITADO ASISTE guest_name, attendanceBoolean simplesimplified Yes normalized generalizationizations minimization initialize visualization generalized optimizedizations minimized authorizations authorizationization visualizationsizations customized customizable customization customizing customized authorized customizations ionization authorizations synchronized INVITADO guest_name, email, attendance boolean simple standard standardized simple simple raw simple standard simple Latin America Yes standard simplified Boolean Standard yes generalized standard normalized simplified normalization generalization initialization synchronize organizations Authorized Supabase organizationswedding authorized Authorized Authorized wedding authorizations organizations optimization customizations ionization visualization minimized visualizations initialization customize custom allowed column Authorized wedding table wedding_rsvps columns INVITADO ASISTE guest list categories assistants assistant lists asiste cel cel Cel Cell cell cel cell "Sí" cell "No" cell cel cel cell asiste cellcel cellcellcellcellcell cell cell cell. previous insert rawRaw Raw Raw raw formData.attendance string Raw Raw raw. interpreted mismatch DB raw data interpreted raw db mismatch interpreted mismatched interpreted raw db interpreted payload. DB DB Db data raw data empty data interpreted mismatched mapped values interpreted logic mismatch. payload insert insert payload inserted payload inserted mapped payload values raw Db data mismatched standard Yes boolean standardized standardized normalized standardization normalization visualizationizations authorization initialization authorization initialized visualizations initialized organizations authorizations authorizationsizationsization authorizations customization initialized organization customizations initializing visualizing ionization Authorized allowed wedding table wedding Supabase authorizations names DescriptionDescription Descriptions descriptions descriptions Descriptions Descriptions descriptions descriptions Descriptiondescriptions descriptions Descriptions Descriptions descriptions Descriptions description DescriptionDescriptions Descriptions DescriptionDescriptions Descriptions descriptionsDescriptions descriptionsDescriptions descriptions Descriptions DescriptionsDescriptions Descriptions descriptions DescriptionsDescriptionsdescriptions Descriptions descriptions descriptions descriptions Descriptions descriptions Descriptions descriptions descriptionsdescriptions descriptions descriptions descriptions descriptions descriptions.
-            attendance: formData.attendance === 'attending' ? 'Sí' : 'No', // Mapeo para el Panel Admin
-            notes: formData.message || null // Guarda el mensaje en la columna 'notes'
+            attendance: formData.attendance === 'attending' ? 'Sí' : 'No',
+            notes: formData.message || null
           }
         ])
 
-      // Si falla la base de datos, lanza un error para detener el flujo
       if (dbError) {
         console.error('Error al insertar en Supabase:', dbError)
         throw new Error('No se pudo registrar en la base de datos.')
       }
 
-      // 📧 2. ENVÍO DE CORREO VÍA EMAILJS (solo si Supabase guardó con éxito)
+      // 2. Envío de EmailJS
       try {
         await emailjs.send(
-          'service_o05j1rv', // service_id
-          'template_sbcwigm', // template_id
+          'service_o05j1rv',
+          'template_sbcwigm',
           {
-            to_name: sanitizedName, // Nombre del invitado
-            to_email: sanitizedEmail, // Su correo
-            // Texto descriptivo para el correo
+            to_name: sanitizedName,
+            to_email: sanitizedEmail,
             attendance_text: formData.attendance === 'attending' ? 'Asistiré con gusto 🎉' : 'No podré asistir 😢',
-            message: formData.message || 'Sin mensaje adicional.' // Mensaje o notas
+            message: formData.message || 'Sin mensaje adicional.'
           },
-          'qtXHlAKLTWgdrXZM9' // public_key
+          'qtXHlAKLTWgdrXZM9'
         )
       } catch (emailErr) {
-        // Logueamos el error pero no bloqueamos el éxito para el usuario final
         console.warn('Respuesta guardada en Supabase, pero falló EmailJS:', emailErr)
       }
 
-      // 🚀 Mostrar vista de éxito
       setSubmitted(true)
     } catch (err) {
-      console.error('Error en el proceso de RSVP:', err)
+      console.error('Error en RSVP:', err)
       setErrorMsg('Ocurrió un error al enviar tu respuesta. Por favor intenta de nuevo.')
     } finally {
       setIsSubmitting(false)
@@ -93,7 +80,7 @@ export default function Rsvp() {
           position: relative;
           width: 100%;
           min-height: 100vh;
-          padding: 90px 20px;
+          padding: 80px 20px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -111,11 +98,12 @@ export default function Rsvp() {
           max-width: 580px;
           width: 100%;
           margin: 0 auto;
+          box-sizing: border-box;
         }
 
         .rsvp-header {
           text-align: center;
-          margin-bottom: 35px;
+          margin-bottom: 30px;
         }
 
         .rsvp-subtitle {
@@ -130,7 +118,7 @@ export default function Rsvp() {
         }
 
         .rsvp-title {
-          font-size: 2.7rem;
+          font-size: 2.5rem;
           font-weight: 300;
           color: #FAF7F2;
           margin: 0 0 14px 0;
@@ -152,17 +140,19 @@ export default function Rsvp() {
         }
 
         .rsvp-card {
-          background-color: rgba(44, 12, 16, 0.65);
+          background-color: rgba(44, 12, 16, 0.75);
           backdrop-filter: blur(12px);
           -webkit-backdrop-filter: blur(12px);
           border: 1px solid rgba(212, 163, 115, 0.3);
-          border-radius: 24px;
-          padding: 40px 32px;
+          border-radius: 20px;
+          padding: 36px 28px;
           box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+          box-sizing: border-box;
+          width: 100%;
         }
 
         .form-group {
-          margin-bottom: 22px;
+          margin-bottom: 20px;
         }
 
         .form-label {
@@ -184,28 +174,27 @@ export default function Rsvp() {
 
         .form-input, .form-textarea {
           width: 100%;
-          background-color: rgba(20, 4, 6, 0.5);
-          border: 1px solid rgba(212, 163, 115, 0.25);
-          border-radius: 12px;
-          padding: 14px 16px;
+          background-color: rgba(20, 4, 6, 0.6);
+          border: 1px solid rgba(212, 163, 115, 0.3);
+          border-radius: 10px;
+          padding: 12px 14px;
           color: #FAF7F2;
           font-size: 0.95rem;
           font-family: system-ui, -apple-system, sans-serif;
           box-sizing: border-box;
-          transition: border-color 0.25s ease, background-color 0.25s ease;
+          transition: border-color 0.25s ease;
         }
 
         .form-input:focus, .form-textarea:focus {
           outline: none;
           border-color: #D4A373;
-          background-color: rgba(20, 4, 6, 0.75);
+          background-color: rgba(20, 4, 6, 0.85);
         }
 
         .form-input::placeholder, .form-textarea::placeholder {
           color: #8C7567;
         }
 
-        /* RADIO BUTTONS ACCESIBLES */
         .radio-grid {
           display: grid;
           grid-template-columns: 1fr 1fr;
@@ -216,25 +205,21 @@ export default function Rsvp() {
           display: flex;
           align-items: center;
           gap: 10px;
-          background-color: rgba(20, 4, 6, 0.5);
-          border: 1px solid rgba(212, 163, 115, 0.25);
-          border-radius: 12px;
-          padding: 14px 14px;
+          background-color: rgba(20, 4, 6, 0.6);
+          border: 1px solid rgba(212, 163, 115, 0.3);
+          border-radius: 10px;
+          padding: 12px 14px;
           cursor: pointer;
           transition: all 0.25s ease;
           user-select: none;
-        }
-
-        .radio-option:hover {
-          border-color: rgba(212, 163, 115, 0.5);
+          box-sizing: border-box;
         }
 
         .radio-option.selected {
           border-color: #D4A373;
-          background-color: rgba(212, 163, 115, 0.12);
+          background-color: rgba(212, 163, 115, 0.15);
         }
 
-        /* Oculta visualmente el input radio pero lo mantiene accesible para teclados y lectores */
         .sr-only {
           position: absolute;
           width: 1px;
@@ -243,7 +228,6 @@ export default function Rsvp() {
           margin: -1px;
           overflow: hidden;
           clip: rect(0, 0, 0, 0);
-          white-space: nowrap;
           border-width: 0;
         }
 
@@ -272,10 +256,9 @@ export default function Rsvp() {
           font-weight: 500;
         }
 
-        /* BOTÓN DE ENVIAR */
         .submit-btn {
           width: 100%;
-          height: 52px;
+          height: 50px;
           background-color: #C4966B;
           color: #FFFFFF;
           border: none;
@@ -293,8 +276,6 @@ export default function Rsvp() {
 
         .submit-btn:hover:not(:disabled) {
           background-color: #B08156;
-          transform: translateY(-2px);
-          box-shadow: 0 12px 25px rgba(0, 0, 0, 0.4);
         }
 
         .submit-btn:disabled {
@@ -302,39 +283,42 @@ export default function Rsvp() {
           cursor: not-allowed;
         }
 
-        /* MENSAJE DE ÉXITO */
         .success-box {
           text-align: center;
-          padding: 30px 10px;
+          padding: 20px 10px;
         }
 
         .success-icon {
-          width: 60px;
-          height: 60px;
+          width: 50px;
+          height: 50px;
           border-radius: 50%;
           background-color: rgba(212, 163, 115, 0.15);
           border: 1px solid #D4A373;
           display: flex;
           align-items: center;
           justify-content: center;
-          margin: 0 auto 20px;
+          margin: 0 auto 16px;
           color: #D4A373;
-          font-size: 1.6rem;
+          font-size: 1.4rem;
         }
 
+        /* 📱 ESTILOS OPTIMIZADOS PARA CELULAR */
         @media (max-width: 640px) {
           .rsvp-section {
-            padding: 60px 166px;
-            background-attachment: scroll;
+            padding: 50px 16px; /* CORREGIDO: antes decía 166px */
+            background-attachment: scroll; /* Previene errores visuales en Safari iOS */
           }
           .rsvp-card {
-            padding: 28px 20px;
+            padding: 24px 18px;
           }
           .radio-grid {
-            grid-template-columns: 1fr;
+            grid-template-columns: 1fr; /* Apila las opciones para presionar fácil con el pulgar */
           }
           .rsvp-title {
-            font-size: 2.2rem;
+            font-size: 2rem;
+          }
+          .rsvp-desc {
+            font-size: 0.9rem;
           }
         }
       `}</style>
@@ -355,17 +339,16 @@ export default function Rsvp() {
           {submitted ? (
             <div className="success-box">
               <div className="success-icon">✓</div>
-              <h3 style={{ fontSize: '1.8rem', color: '#FAF7F2', margin: '0 0 10px 0', fontWeight: 400 }}>
+              <h3 style={{ fontSize: '1.6rem', color: '#FAF7F2', margin: '0 0 10px 0', fontWeight: 400 }}>
                 ¡Muchas Gracias!
               </h3>
-              <p style={{ color: '#E8DACB', fontSize: '0.95rem', lineHeight: 1.6, margin: 0, fontWeight: 300 }}>
+              <p style={{ color: '#E8DACB', fontSize: '0.92rem', lineHeight: 1.6, margin: 0, fontWeight: 300 }}>
                 Hemos recibido tu respuesta correctamente. Te enviamos un correo de confirmación a <strong>{formData.email}</strong>.
               </p>
             </div>
           ) : (
             <form onSubmit={handleSubmit}>
               
-              {/* CAMPO 1: NOMBRE Y APELLIDO */}
               <div className="form-group">
                 <label htmlFor="name" className="form-label">Nombre y Apellido</label>
                 <input
@@ -380,7 +363,6 @@ export default function Rsvp() {
                 />
               </div>
 
-              {/* CAMPO 2: CORREO ELECTRÓNICO */}
               <div className="form-group">
                 <label htmlFor="email" className="form-label">Correo Electrónico</label>
                 <input
@@ -395,11 +377,9 @@ export default function Rsvp() {
                 />
               </div>
 
-              {/* CAMPO 3: RESPUESTA */}
               <div className="form-group">
                 <span className="form-label">Respuesta</span>
                 <div className="radio-grid" role="radiogroup">
-                  
                   <label className={`radio-option ${formData.attendance === 'attending' ? 'selected' : ''}`}>
                     <input
                       type="radio"
@@ -429,11 +409,9 @@ export default function Rsvp() {
                     </div>
                     <span className="radio-text">No podré asistir</span>
                   </label>
-
                 </div>
               </div>
 
-              {/* CAMPO 4: MENSAJE (OPCIONAL) */}
               <div className="form-group">
                 <label htmlFor="message" className="form-label">
                   Mensaje para los novios <span className="form-label-optional">(opcional)</span>
@@ -455,7 +433,6 @@ export default function Rsvp() {
                 </p>
               )}
 
-              {/* BOTÓN ENVIAR */}
               <button type="submit" className="submit-btn" disabled={isSubmitting}>
                 {isSubmitting ? 'Enviando...' : 'Enviar Respuesta'}
               </button>
