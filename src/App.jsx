@@ -14,6 +14,9 @@ import Gallery from './components/Gallery.jsx'
 import Lightbox from './components/Lightbox.jsx'
 import Footer from './components/Footer.jsx'
 
+// ✉️ EXPERIENCIA DE APERTURA INICIAL
+import InvitationOpening from './components/sections/InvitationOpening.jsx'
+
 const PAGE_SIZE = 9
 
 // 🔄 Lista de IDs para navegación y observador de scroll
@@ -27,6 +30,16 @@ const SECTION_IDS = [
 ]
 
 export default function App() {
+  // Estado para controlar si mostramos la pantalla de apertura del sobre
+  const [showOpening, setShowOpening] = useState(() => {
+    return !sessionStorage.getItem('invitation_opened')
+  })
+
+  const handleOpeningComplete = () => {
+    sessionStorage.setItem('invitation_opened', 'true')
+    setShowOpening(false)
+  }
+
   const [items, setItems] = useState([])
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState(null)
@@ -135,6 +148,16 @@ export default function App() {
 
   return (
     <>
+      {/* ✉️ CAPA DE APERTURA DE INVITACIÓN (Solo aparece al entrar inicialmente) */}
+      {showOpening && (
+        <InvitationOpening
+          onComplete={handleOpeningComplete}
+          coupleNames="Felipe & Victoria"
+          weddingDate="07 . 11 . 2026"
+          photoSrc="/photos/preboda.jpeg" // Reemplaza con la ruta real de tu foto
+        />
+      )}
+
       <div className="page">
         <style>{`
           /* 🛠️ RESET GLOBAL DE MÁRGENES Y ENCUADRE CON NAVBAR */
@@ -254,7 +277,7 @@ export default function App() {
         )}
       </div>
 
-      {/* 🎵 Reproductor flotante de música (Aislado fuera de .page para evitar bugs de WebKit) */}
+      {/* 🎵 Reproductor flotante de música */}
       <MusicPlayer />
     </>
   )
