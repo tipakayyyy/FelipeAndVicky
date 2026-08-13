@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback, useMemo } from 'react'
 import { supabase, TABLE_NAME } from './supabaseClient'
 import Navbar from './components/Navbar.jsx'
 import Home from './components/sections/Home.jsx'
-import WeddingCountdown from './components/sections/WeddingCountdown.jsx' // 👈 Componente del contador
+import WeddingCountdown from './components/sections/WeddingCountdown.jsx'
 import OurStory from './components/sections/OurStory.jsx'
 import BigDay from './components/sections/BigDay.jsx'
 import InfoSection from './components/sections/InfoSection.jsx'
@@ -135,72 +135,109 @@ export default function App() {
 
   return (
     <div className="page">
+      <style>{`
+        /* 🛠️ RESET GLOBAL DE MÁRGENES Y ENCUADRE CON NAVBAR */
+        html, body {
+          margin: 0 !important;
+          padding: 0 !important;
+          width: 100% !important;
+          overflow-x: hidden;
+        }
+
+        .page {
+          width: 100%;
+          min-height: 100vh;
+          margin: 0;
+          padding: 0;
+        }
+
+        /* CONTENEDOR PRINCIPAL: Pegado al Navbar lateral de 62px */
+        .app-main {
+          margin-left: 62px !important;
+          width: calc(100% - 62px) !important;
+          max-width: none !important;
+          padding: 0 !important;
+        }
+
+        /* RESPONSIVE EN CELULARES */
+        @media (max-width: 900px) {
+          .app-main {
+            margin-left: 0 !important;
+            width: 100% !important;
+          }
+        }
+      `}</style>
+
+      {/* 1. Navbar lateral fijo (62px de ancho) */}
       <Navbar activeSection={activeSection} />
 
-      {/* 🎵 El reproductor activo de fondo y flotante */}
+      {/* 🎵 Reproductor flotante de música */}
       <MusicPlayer />
 
-      {/* 1. Portada */}
-      <section id="inicio">
-        <Home />
-      </section>
+      {/* 2. Área principal alineada sin espacios sobrantes */}
+      <main className="app-main">
+        {/* 1. Portada */}
+        <section id="inicio">
+          <Home />
+        </section>
 
-      {/* ⏰ CONTADOR Y AGENDAR CALENDARIO */}
-      <WeddingCountdown />
+        {/* ⏰ Contador de tiempo y agendar fecha */}
+        <WeddingCountdown />
 
-      {/* 2. Nuestra Historia */}
-      <section id="historia">
-        <OurStory />
-      </section>
+        {/* 2. Nuestra Historia */}
+        <section id="historia">
+          <OurStory />
+        </section>
 
-      {/* 3. Detalles del Gran Día */}
-      <section id="gran-dia">
-        <BigDay />
-      </section>
+        {/* 3. Detalles del Gran Día */}
+        <section id="gran-dia">
+          <BigDay />
+        </section>
 
-      {/* 4. Confirmación de Asistencia */}
-      <section id="asistencia">
-        <Rsvp />
-      </section>
+        {/* 4. Confirmación de Asistencia */}
+        <section id="asistencia">
+          <Rsvp />
+        </section>
 
-      {/* 5. Información (Regalos) */}
-      <section id="informacion">
-        <InfoSection />
-      </section>
+        {/* 5. Información (Regalos) */}
+        <section id="informacion">
+          <InfoSection />
+        </section>
 
-      {/* 📸 6. GALERÍA COMPARTIDA */}
-      <section id="galeria" className="gallery-section">
-        <GalleryHeader
-          stats={stats}
-          onOpenUpload={() => setIsUploadOpen(true)}
-          activeFilter={activeFilter}
-          onSelectFilter={handleSelectFilter}
-        />
+        {/* 📸 6. GALERÍA COMPARTIDA */}
+        <section id="galeria" className="gallery-section">
+          <GalleryHeader
+            stats={stats}
+            onOpenUpload={() => setIsUploadOpen(true)}
+            activeFilter={activeFilter}
+            onSelectFilter={handleSelectFilter}
+          />
 
-        {loading && <p className="status-text">Cargando el álbum…</p>}
-        {loadError && (
-          <p className="status-text error">
-            No pudimos cargar la galería: {loadError}
-          </p>
-        )}
-        {!loading && !loadError && filteredItems.length === 0 && (
-          <p className="status-text">
-            {items.length === 0
-              ? 'Aún no hay fotos ni videos — ¡sé el primero en compartir un momento!'
-              : 'No hay momentos en esta categoría todavía.'}
-          </p>
-        )}
+          {loading && <p className="status-text">Cargando el álbum…</p>}
+          {loadError && (
+            <p className="status-text error">
+              No pudimos cargar la galería: {loadError}
+            </p>
+          )}
+          {!loading && !loadError && filteredItems.length === 0 && (
+            <p className="status-text">
+              {items.length === 0
+                ? 'Aún no hay fotos ni videos — ¡sé el primero en compartir un momento!'
+                : 'No hay momentos en esta categoría todavía.'}
+            </p>
+          )}
 
-        <Gallery
-          items={visibleItems}
-          onSelect={setActiveIndex}
-          hasMore={hasMore}
-          onLoadMore={() => setVisibleCount((c) => c + PAGE_SIZE)}
-        />
-      </section>
+          <Gallery
+            items={visibleItems}
+            onSelect={setActiveIndex}
+            hasMore={hasMore}
+            onLoadMore={() => setVisibleCount((c) => c + PAGE_SIZE)}
+          />
+        </section>
 
-      {/* Pie de Página */}
-      <Footer />
+        {/* Pie de Página */}
+        <Footer />
+      </main>
 
       {/* Modales Flotantes */}
       <UploadModal

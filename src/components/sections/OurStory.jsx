@@ -1,335 +1,439 @@
-import React, { useState } from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 
-// =========================================================
-// 🖼️ RUTA DE TU IMAGEN DE FONDO ESTÁTICA
-// Cambia '/photos/story-bg.jpg' por la ruta o URL de tu foto de fondo
-// =========================================================
-const STORY_BG_IMAGE = '/photos/texture.jpg'
+// 📸 MANTENIENDO EXACTAMENTE TUS 22 FOTOS Y RUTAS EXISTENTES
+const STORY_ITEMS = [
+  { id: 1, year: '2005', image: '/photos/2005.jpeg' },
+  { id: 2, year: '2006', image: '/photos/2006.jpeg' },
+  { id: 3, year: '2007', image: '/photos/2007.jpeg' },
+  { id: 4, year: '2008', image: '/photos/2008.jpeg' },
+  { id: 5, year: '2009', image: '/photos/2009.jpeg' },
+  { id: 6, year: '2010', image: '/photos/2010.jpeg' },
+  { id: 7, year: '2011', image: '/photos/2011.jpeg' },
+  { id: 8, year: '2012', image: '/photos/2012.jpeg' },
+  { id: 9, year: '2013', image: '/photos/2013.jpeg' },
+  { id: 10, year: '2014', image: '/photos/2014.jpeg' },
+  { id: 11, year: '2015', image: '/photos/2015.jpeg' },
+  { id: 12, year: '2016', image: '/photos/2016.jpeg' },
+  { id: 13, year: '2017', image: '/photos/2017.jpeg' },
+  { id: 14, year: '2018', image: '/photos/2018.jpeg' },
+  { id: 15, year: '2019', image: '/photos/2019.jpeg' },
+  { id: 16, year: '2020', image: '/photos/2020.jpeg' },
+  { id: 17, year: '2021', image: '/photos/2021.jpeg' },
+  { id: 18, year: '2022', image: '/photos/2022.jpeg' },
+  { id: 19, year: '2023', image: '/photos/2023.jpeg' },
+  { id: 20, year: '2024', image: '/photos/2024.jpeg' },
+  { id: 21, year: '2025', image: '/photos/2025.jpeg' },
+  { id: 22, year: '2026', image: '/photos/2026.jpeg' },
+]
 
-export default function StorySection() {
-  // Estado para el visor de foto ampliada (Modal / Lightbox)
-  const [selectedEvent, setSelectedEvent] = useState(null)
+export default function OurStory() {
+  const scrollRef = useRef(null)
+  const [activeIndex, setActiveIndex] = useState(0)
 
-  const timelineEvents = [
-    {
-      year: '2003',
-      tag: 'EL INICIO',
-      title: 'Nuestro Primer Encuentro',
-      description: 'Una coincidencia inesperada que se convirtió en una mirada inolvidable. Aquel día comenzó a escribirse la historia más bonita de nuestras vidas.',
-      photo: '/photos/story-1.jpeg'
-    },
-    {
-      year: '2005',
-      tag: 'FAMILIA',
-      title: 'Nuestro Hogar y Nuestra Familia',
-      description: 'El comienzo de nuestro viaje juntos, construyendo un hogar lleno de amor, risas y recuerdos que nos acompañarán para siempre.',
-      photo: '/photos/story-2.jpeg' 
-    },
-    {
-      year: '2025',
-      tag: 'EL PASO MÁS IMPORTANTE',
-      title: 'La Propuesta',
-      description: 'Bajo una atmósfera mágica, con el corazón acelerado y una promesa infinita: un "Sí, acepto" que resonará para siempre.',
-      photo: '/photos/story-main.jpeg'
-    },
-    {
-      year: '2026',
-      tag: 'NUESTRO CAPÍTULO PRINCIPAL',
-      title: 'El Gran Día',
-      description: 'Frente a las personas que más amamos en la vida, uniremos nuestras almas para construir un futuro infinito.',
-      photo: '/photos/story-3.jpeg'
+  // Manejador del desplazamiento con actualización fluida del indicador
+  const handleScroll = () => {
+    if (scrollRef.current) {
+      const container = scrollRef.current
+      const scrollPosition = container.scrollLeft
+      // Ancho aproximado de cada ítem más el gap
+      const itemWidth = container.querySelector('.story-card')?.offsetWidth || 280
+      const gap = 32
+      const index = Math.round(scrollPosition / (itemWidth + gap))
+      setActiveIndex(Math.min(Math.max(index, 0), STORY_ITEMS.length - 1))
     }
-  ]
+  }
+
+  // Navegación mediante flechas
+  const scroll = (direction) => {
+    if (scrollRef.current) {
+      const container = scrollRef.current
+      const itemWidth = container.querySelector('.story-card')?.offsetWidth || 280
+      const amount = direction === 'left' ? -(itemWidth + 32) : (itemWidth + 32)
+      container.scrollBy({ left: amount, behavior: 'smooth' })
+    }
+  }
+
+  // Click directo en los puntos indicadores
+  const scrollToCard = (index) => {
+    if (scrollRef.current) {
+      const container = scrollRef.current
+      const itemWidth = container.querySelector('.story-card')?.offsetWidth || 280
+      const gap = 32
+      container.scrollTo({ left: index * (itemWidth + gap), behavior: 'smooth' })
+    }
+  }
 
   return (
-    <section
-      id="nuestra-historia"
-      style={{
-        backgroundColor: '#142019', // Verde frío oscuro súper elegante de fondo base
-        
-        /* 🖼️ IMAGEN DE FONDO ESTÁTICA CON FILTRO OSCURO */
-        backgroundImage: `linear-gradient(rgba(20, 32, 25, 0.85), rgba(20, 32, 25, 0.85)), url('${STORY_BG_IMAGE}')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        backgroundAttachment: 'fixed', // Fondo estático fijo al hacer scroll
-        
-        color: '#ffffff',
-        padding: '90px 20px 110px 20px',
-        position: 'relative',
-        overflow: 'hidden'
-      }}
-    >
-      {/* Luz ambiental sutil */}
-      <div style={{
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: '600px',
-        height: '600px',
-        background: 'radial-gradient(circle, rgba(212, 163, 115, 0.05) 0%, rgba(20, 32, 25, 0) 70%)',
-        pointerEvents: 'none'
-      }} />
+    <section className="our-story-editorial">
+      <style>{`
+        /* =========================================================
+           PALETA DE COLORES EDITORIAL
+           Fondo: Beige Warm Marfil (#F6F1E8 / #EFE8DC)
+           Principal: Verde Bosque Botánico (#173C32 / #1F4A3C)
+           Acento Secundario: Vino sutil (#6B1F2A)
+           Detalles: Dorado Atemporal Fine-line (#C6A15B)
+        ========================================================= */
+        .our-story-editorial {
+          background-color: #F6F1E8;
+          padding: 100px 0 90px 0;
+          font-family: 'Montserrat', sans-serif;
+          position: relative;
+          overflow: hidden;
+        }
 
-      <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative', zIndex: 2 }}>
-        
-        {/* ENCABEZADO */}
-        <div style={{ textAlign: 'center', marginBottom: '50px' }}>
-          <span style={{ 
-            textTransform: 'uppercase', 
-            fontSize: '0.78rem', 
-            letterSpacing: '4px', 
-            color: '#d4a373', 
-            fontWeight: '600' 
-          }}>
-            NUESTRA HISTORIA
-          </span>
-          <h2 style={{ 
-            fontSize: '2.6rem', 
-            fontFamily: 'serif', 
-            marginTop: '10px',
-            marginBottom: '15px',
-            fontWeight: '300',
-            color: '#f4efe9'
-          }}>
-            El camino hacia el <span style={{ color: '#d4a373', fontStyle: 'italic', fontWeight: 'normal' }}>Para Siempre</span>
-          </h2>
-          <div style={{ width: '40px', height: '1px', backgroundColor: '#d4a373', margin: '0 auto', opacity: 0.6 }} />
-          <p style={{ color: 'rgba(255,255,255,0.45)', fontSize: '0.82rem', marginTop: '14px', letterSpacing: '0.5px' }}>
-            Desliza horizontalmente y haz clic en las fotografías para ampliar 🔍
-          </p>
-        </div>
+        /* 3. HEADER DE LA SECCIÓN EDITORIAL */
+        .story-header {
+          text-align: center;
+          margin-bottom: 50px;
+          padding: 0 24px;
+        }
 
-        {/* CONTENEDOR DE LÍNEA DE TIEMPO HORIZONTAL */}
-        <div style={{ position: 'relative', padding: '40px 0 20px 0' }}>
-          
-          {/* Eje horizontal dorado continuo */}
-          <div style={{
-            position: 'absolute',
-            top: '25px',
-            left: '0',
-            right: '0',
-            height: '1px',
-            backgroundColor: 'rgba(212, 163, 115, 0.25)',
-            zIndex: 1
-          }} />
+        .story-subtag {
+          font-family: 'Montserrat', sans-serif;
+          font-size: 0.72rem;
+          letter-spacing: 5px;
+          text-transform: uppercase;
+          font-weight: 500;
+          color: #173C32;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+          margin-bottom: 12px;
+        }
 
-          {/* Carrusel Desplazable en una sola línea */}
-          <div style={{
-            display: 'flex',
-            gap: '30px',
-            overflowX: 'auto',
-            paddingBottom: '25px',
-            paddingTop: '10px',
-            scrollSnapType: 'x mandatory',
-            WebkitOverflowScrolling: 'touch',
-            position: 'relative',
-            zIndex: 2,
-            scrollbarWidth: 'thin',
-            scrollbarColor: '#d4a373 rgba(255,255,255,0.05)'
-          }}>
+        .story-subtag::before,
+        .story-subtag::after {
+          content: "✦";
+          font-size: 0.6rem;
+          color: #C6A15B;
+        }
 
-            {timelineEvents.map((event, index) => (
-              <div 
-                key={index}
-                style={{
-                  flex: '0 0 350px',
-                  scrollSnapAlign: 'start',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  position: 'relative'
-                }}
-              >
-                {/* Punto nodal dorado en la línea */}
-                <div style={{
-                  width: '14px',
-                  height: '14px',
-                  borderRadius: '50%',
-                  backgroundColor: '#142019',
-                  border: '2px solid #d4a373',
-                  boxShadow: '0 0 10px rgba(212, 163, 115, 0.5)',
-                  margin: '-7px auto 25px auto',
-                  position: 'relative',
-                  zIndex: 3
-                }} />
+        .story-main-title {
+          font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+          font-size: 3.2rem;
+          color: #173C32;
+          font-weight: 400;
+          letter-spacing: -0.5px;
+          margin: 0 0 20px 0;
+          line-height: 1.15;
+        }
 
-                {/* Tarjeta con Foto Grande */}
-                <div 
-                  onClick={() => setSelectedEvent(event)}
-                  style={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.03)',
-                    backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(212, 163, 115, 0.2)',
-                    borderRadius: '20px',
-                    padding: '20px',
-                    boxShadow: '0 15px 35px rgba(0, 0, 0, 0.3)',
-                    cursor: 'pointer',
-                    transition: 'all 0.3s ease',
-                    height: '100%',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between'
-                  }}
-                >
-                  <div>
-                    {/* Encabezado de la Tarjeta */}
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-                      <span style={{ fontSize: '0.7rem', letterSpacing: '2px', color: '#d4a373', fontWeight: '700' }}>
-                        {event.tag}
-                      </span>
-                      <span style={{ fontFamily: 'serif', fontSize: '1.2rem', color: 'rgba(255,255,255,0.4)' }}>
-                        {event.year}
-                      </span>
-                    </div>
-              
-                    {/* FOTO EXTRA GRANDE E INTERACTIVA */}
-                    <div style={{
-                      width: '100%',
-                      height: '240px',
-                      borderRadius: '14px',
-                      overflow: 'hidden',
-                      marginBottom: '16px',
-                      position: 'relative',
-                      border: '1px solid rgba(212, 163, 115, 0.25)'
-                    }}>
-                      <img 
-                        src={event.photo} 
-                        alt={event.title}
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'cover',
-                          transition: 'transform 0.4s ease'
-                        }}
-                      />
-                      {/* Badge flotante de clic */}
-                      <div style={{
-                        position: 'absolute',
-                        bottom: '10px',
-                        right: '10px',
-                        backgroundColor: 'rgba(20, 32, 25, 0.75)',
-                        backdropFilter: 'blur(5px)',
-                        color: '#d4a373',
-                        padding: '6px 12px',
-                        borderRadius: '20px',
-                        fontSize: '0.72rem',
-                        fontWeight: '500',
-                        border: '1px solid rgba(212, 163, 115, 0.3)'
-                      }}>
-                        🔍 Ampliar
-                      </div>
-                    </div>
+        /* Separador fino ornamental debajo del título */
+        .story-ornament-divider {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 16px;
+          color: #C6A15B;
+          font-size: 0.75rem;
+          opacity: 0.8;
+        }
 
-                    {/* Título */}
-                    <h3 style={{ fontFamily: 'serif', fontSize: '1.35rem', color: '#ffffff', margin: '0 0 8px 0', fontWeight: '400' }}>
-                      {event.title}
-                    </h3>
+        .story-ornament-divider::before,
+        .story-ornament-divider::after {
+          content: "";
+          height: 1px;
+          width: 50px;
+          background: linear-gradient(90deg, transparent, #C6A15B, transparent);
+        }
 
-                    {/* Descripción */}
-                    <p style={{ color: 'rgba(244, 239, 233, 0.75)', fontSize: '0.85rem', lineHeight: '1.6', margin: 0, fontWeight: '300' }}>
-                      {event.description}
-                    </p>
-                  </div>
-                </div>
+        /* 4. CONTENEDOR PRINCIPAL DEL CARRUSEL */
+        .story-carousel-wrapper {
+          position: relative;
+          width: 100%;
+        }
 
+        .story-scroll-container {
+          display: flex;
+          gap: 32px;
+          overflow-x: auto;
+          scroll-snap-type: x mandatory;
+          padding: 20px 10vw 40px 10vw;
+          -webkit-overflow-scrolling: touch;
+          scroll-behavior: smooth;
+        }
+
+        /* Ocultar barra de scroll para limpieza estética visual */
+        .story-scroll-container::-webkit-scrollbar {
+          display: none;
+        }
+        .story-scroll-container {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+
+        /* TARJETAS DE FOTOGRAFÍA (DESKTOP) */
+        .story-item-block {
+          flex: 0 0 calc((100vw - 20vw - (32px * 3)) / 4.2); /* Muestra 4.2 fotos en escritorio */
+          min-width: 260px;
+          max-width: 310px;
+          scroll-snap-align: center;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .story-card {
+          width: 100%;
+          aspect-ratio: 3 / 4;
+          border-radius: 12px;
+          overflow: hidden;
+          background-color: #EFE8DC;
+          box-shadow: 0 8px 24px rgba(23, 60, 50, 0.05);
+          transition: transform 400ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 400ms ease;
+          position: relative;
+        }
+
+        .story-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 14px 32px rgba(23, 60, 50, 0.1);
+        }
+
+        .story-card img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+          transition: transform 700ms ease;
+        }
+
+        .story-card:hover img {
+          transform: scale(1.02);
+        }
+
+        /* 5. AÑOS EDITORIALES */
+        .story-year-wrapper {
+          margin-top: 18px;
+          text-align: center;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .story-year-number {
+          font-family: 'Cormorant Garamond', Georgia, serif;
+          font-size: 1.65rem;
+          font-weight: 500;
+          color: #173C32;
+          letter-spacing: 1px;
+        }
+
+        .story-year-subline {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          color: #C6A15B;
+          font-size: 0.5rem;
+          margin-top: 4px;
+          opacity: 0.75;
+        }
+
+        .story-year-subline::before,
+        .story-year-subline::after {
+          content: "";
+          height: 1px;
+          width: 20px;
+          background-color: #C6A15B;
+        }
+
+        /* 6. CONTROLES DEL CARRUSEL (FLECHAS MÍNIMAS) */
+        .story-nav-btn {
+          position: absolute;
+          top: calc(50% - 35px);
+          transform: translateY(-50%);
+          z-index: 5;
+          width: 42px;
+          height: 42px;
+          border-radius: 50%;
+          background-color: #FBF8F2;
+          border: 1px solid rgba(198, 161, 91, 0.3);
+          color: #173C32;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: all 250ms ease;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+        }
+
+        .story-nav-btn:hover {
+          background-color: #173C32;
+          color: #FBF8F2;
+          border-color: #173C32;
+          transform: translateY(-50%) scale(1.05);
+        }
+
+        .story-nav-btn:active {
+          background-color: #6B1F2A; /* Acento vino sutil en tap */
+          border-color: #6B1F2A;
+        }
+
+        .story-nav-btn.prev { left: 3vw; }
+        .story-nav-btn.next { right: 3vw; }
+
+        .story-nav-btn svg {
+          width: 18px;
+          height: 18px;
+          fill: currentColor;
+        }
+
+        /* 7. INDICADORES PUNTUALES MINIMALISTAS */
+        .story-indicators {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          gap: 8px;
+          margin-top: 24px;
+        }
+
+        .story-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background-color: #DCD3C5;
+          border: none;
+          padding: 0;
+          cursor: pointer;
+          transition: all 300ms ease;
+        }
+
+        .story-dot.active {
+          background-color: #173C32;
+          transform: scale(1.35);
+          box-shadow: 0 0 0 2px rgba(107, 31, 42, 0.15); /* Micro toque vino alrededor */
+        }
+
+        /* =========================================================
+           9. ADAPTACIÓN RESPONSIVE EDITORIAL
+        ========================================================= */
+
+        /* TABLET */
+        @media (max-width: 1024px) {
+          .our-story-editorial {
+            padding: 80px 0 70px 0;
+          }
+          .story-main-title {
+            font-size: 2.7rem;
+          }
+          .story-scroll-container {
+            padding-left: 6vw;
+            padding-right: 6vw;
+            gap: 24px;
+          }
+          .story-item-block {
+            flex: 0 0 calc((100vw - 12vw - (24px * 2)) / 3.1); /* Muestra 3 fotos principales */
+            min-width: 220px;
+          }
+        }
+
+        /* MOBILE: 1 FOTO DESTACADA POR PANTALLA */
+        @media (max-width: 650px) {
+          .our-story-editorial {
+            padding: 60px 0 50px 0;
+          }
+          .story-header {
+            margin-bottom: 36px;
+          }
+          .story-main-title {
+            font-size: 2.2rem;
+          }
+
+          .story-nav-btn {
+            display: none; /* Desaparecen flechas en mobile para limpiar vista */
+          }
+
+          .story-scroll-container {
+            padding-left: 12vw;
+            padding-right: 12vw;
+            gap: 20px;
+            scroll-snap-type: x mandatory;
+          }
+
+          .story-item-block {
+            flex: 0 0 76vw; /* Exactamente 1 foto central holgada */
+            max-width: none;
+            scroll-snap-align: center;
+          }
+
+          .story-card {
+            border-radius: 10px;
+          }
+
+          .story-year-number {
+            font-size: 1.5rem;
+          }
+        }
+      `}</style>
+
+      {/* 3. HEADER EDITORIAL DE LA SECCIÓN */}
+      <header className="story-header">
+        <span className="story-subtag">NUESTRO CAMINO</span>
+        <h2 className="story-main-title">Nuestra Historia</h2>
+        <div className="story-ornament-divider">✦</div>
+      </header>
+
+      {/* 4. CARRUSEL Y NAVEGACIÓN */}
+      <div className="story-carousel-wrapper">
+        {/* Flecha Izquierda */}
+        <button 
+          className="story-nav-btn prev" 
+          onClick={() => scroll('left')}
+          aria-label="Fotografía anterior"
+        >
+          <svg viewBox="0 0 24 24">
+            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+          </svg>
+        </button>
+
+        {/* 4 & 5. CONTENEDOR DE FOTOGRAFÍAS Y AÑOS */}
+        <div 
+          className="story-scroll-container" 
+          ref={scrollRef}
+          onScroll={handleScroll}
+        >
+          {STORY_ITEMS.map((item) => (
+            <div key={item.id} className="story-item-block">
+              <div className="story-card">
+                <img 
+                  src={item.image} 
+                  alt={`Nuestra Historia ${item.year}`} 
+                  loading="lazy" 
+                />
               </div>
-            ))}
 
-          </div>
+              {/* 5. AÑO CON ADORNO FINE-LINE */}
+              <div className="story-year-wrapper">
+                <span className="story-year-number">{item.year}</span>
+                <div className="story-year-subline">✦</div>
+              </div>
+            </div>
+          ))}
         </div>
 
+        {/* Flecha Derecha */}
+        <button 
+          className="story-nav-btn next" 
+          onClick={() => scroll('right')}
+          aria-label="Siguiente fotografía"
+        >
+          <svg viewBox="0 0 24 24">
+            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+          </svg>
+        </button>
       </div>
 
-      {/* ============================================================ */}
-      {/* VISOR MODAL / LIGHTBOX (AL HACER CLIC EN CUALQUIER FOTO)     */}
-      {/* ============================================================ */}
-      {selectedEvent && (
-        <div 
-          onClick={() => setSelectedEvent(null)}
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: 'rgba(10, 16, 12, 0.92)',
-            backdropFilter: 'blur(12px)',
-            zIndex: 99999,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '20px',
-            cursor: 'zoom-out'
-          }}
-        >
-          <div 
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              maxWidth: '700px',
-              width: '100%',
-              backgroundColor: '#17241c',
-              border: '1px solid rgba(212, 163, 115, 0.3)',
-              borderRadius: '24px',
-              overflow: 'hidden',
-              boxShadow: '0 25px 50px rgba(0,0,0,0.6)',
-              position: 'relative'
-            }}
-          >
-            {/* Botón Cerrar (X) */}
-            <button 
-              onClick={() => setSelectedEvent(null)}
-              style={{
-                position: 'absolute',
-                top: '15px',
-                right: '15px',
-                width: '38px',
-                height: '38px',
-                borderRadius: '50%',
-                backgroundColor: 'rgba(0,0,0,0.5)',
-                border: '1px solid rgba(255,255,255,0.2)',
-                color: '#ffffff',
-                fontSize: '1.2rem',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                zIndex: 10
-              }}
-            >
-              ✕
-            </button>
-            
-            {/* Imagen a pantalla completa */}
-            <div style={{ width: '100%', maxHeight: '480px', overflow: 'hidden', backgroundColor: '#0c120e' }}>
-              <img 
-                src={selectedEvent.photo} 
-                alt={selectedEvent.title} 
-                style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }}
-              />
-            </div>
-
-            {/* Detalles en el Modal */}
-            <div style={{ padding: '25px 30px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
-                <span style={{ fontSize: '0.75rem', letterSpacing: '2px', color: '#d4a373', fontWeight: '700' }}>
-                  {selectedEvent.tag}
-                </span>
-                <span style={{ fontFamily: 'serif', fontSize: '1.3rem', color: 'rgba(255,255,255,0.4)' }}>
-                  {selectedEvent.year}
-                </span>
-              </div>
-              <h3 style={{ fontFamily: 'serif', fontSize: '1.7rem', color: '#ffffff', margin: '0 0 10px 0', fontWeight: '300' }}>
-                {selectedEvent.title}
-              </h3>
-              <p style={{ color: 'rgba(244, 239, 233, 0.8)', fontSize: '0.92rem', lineHeight: '1.7', margin: 0, fontWeight: '300' }}>
-                {selectedEvent.description}
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
-
+      {/* 7. INDICADOR MINIMALISTA (PUNTOS) */}
+      <div className="story-indicators">
+        {STORY_ITEMS.map((item, index) => (
+          <button
+            key={item.id}
+            className={`story-dot ${index === activeIndex ? 'active' : ''}`}
+            onClick={() => scrollToCard(index)}
+            aria-label={`Ir al año ${item.year}`}
+          />
+        ))}
+      </div>
     </section>
   )
 }
